@@ -1,0 +1,15 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+    - name: Run Docker Container
+      run: docker compose -f ./docker/docker-compose.yml up -d
