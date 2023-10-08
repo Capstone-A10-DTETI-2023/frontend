@@ -1,5 +1,7 @@
+import type { GetServerSideProps } from 'next'
 import { useState } from 'react';
 import getConfig from 'next/config';
+import useAuth from "@/hooks/useAuth";
 
 import Layout from '@/components/layouts/Layout';
 import {
@@ -9,6 +11,28 @@ import {
 
 const { publicRuntimeConfig } = getConfig();
 const { name } = publicRuntimeConfig.site;
+
+export const getServerSideProps = (async (context: any) => {
+
+    const { isAuthenticated } = useAuth();
+    const user = isAuthenticated();
+
+    if (!user) {
+        return {
+            redirect: {
+                destination: '/auth/signin',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {
+            user: true
+        }
+    }
+})
+
 
 const Home = () => {
 
@@ -39,5 +63,7 @@ const Home = () => {
         </Layout>
     );
 };
+
+
 
 export default Home;
