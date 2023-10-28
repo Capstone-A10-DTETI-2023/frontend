@@ -11,13 +11,18 @@ import {
     Text,
     Link,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
+import useAuth from '@/hooks/useAuth'
+import Layout from '@/components/layouts/Layout'
+import LoadingPage from '@/components/templates/LoadingPage'
+import { useRouter } from 'next/router'
 
 const SignIn = () => {
-    const [isLoading, setLoading] = useState<boolean>(false)
+    const router = useRouter();
 
-    const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [isLoading, setLoading] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     return (
         <section className="container h-screen mx-auto flex flex-col items-center justify-center space-y-8">
@@ -54,12 +59,12 @@ const SignIn = () => {
                             _hover={{
                                 bg: 'blue.500',
                             }}>
-                            Sign up
+                            Sign in
                         </Button>
                     </Stack>
                     <Stack pt={6}>
                         <Text align={'center'}>
-                            Already a user? <Link color={'blue.400'}>Login</Link>
+                            Dont have account yet? <Link href='/auth/signup' color={'blue.400'}>Sign Up</Link>
                         </Text>
                     </Stack>
                 </Stack>
