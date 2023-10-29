@@ -1,7 +1,9 @@
 const Map = () => {
     return (
         <>
-            Map Page
+            <div className="container">
+                Map Page
+            </div>
         </>
     );
 }

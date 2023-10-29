@@ -1,6 +1,7 @@
 import getConfig from "next/config";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Navbar from "../templates/Navbar";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -12,7 +13,7 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-const Layout = ({ children, ...customMeta }: LayoutProps) => {
+const RootLayout = ({ children, ...customMeta }: LayoutProps) => {
   const router = useRouter();
   const { asPath } = router;
 
@@ -28,10 +29,13 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
     ...customMeta,
   };
 
+  const pathIsForAuth = /\/auth/.test(router.pathname);
+  const isRoot = router.asPath === '/' || router.asPath === '';
+
   return (
     <>
       <Head>
-        
+
         <link rel="icon" href="/favicon.ico" key="favicon" />
         <link rel="canonical" href={`${url}${asPath}`} key="canonical" />
 
@@ -80,9 +84,12 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
         )}
         <title key="title">{meta.title}</title>
       </Head>
-      <main >{children}</main>
+      <main className="py-24 mx-auto w-full container">
+        {!pathIsForAuth && <Navbar />}
+        {children}
+      </main>
     </>
   );
 };
 
-export default Layout;
+export default RootLayout;

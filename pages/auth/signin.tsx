@@ -13,9 +13,6 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
-import useAuth from '@/hooks/useAuth'
-import Layout from '@/components/layouts/Layout'
-import LoadingPage from '@/components/templates/LoadingPage'
 import { useRouter } from 'next/router'
 
 const SignIn = () => {

@@ -7,20 +7,23 @@ const useAuth = () => {
         id: 1,
         role_id: 1,
         email: "saddan@gmail",
+        role: "user",
         password: "123"
     }
 
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(user1);
     const [isLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
-    const router = useRouter();
-
 
     const isAuthenticated: boolean = !!user;
 
+    const getRole = () => {
+        return user?.role;
+    }
 
     return {
         isAuthenticated,
+        getRole,
         isLoading,
         user,
         error
