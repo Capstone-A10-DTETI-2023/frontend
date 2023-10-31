@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import { useState } from "react"
 import { User } from "types/User"
 
 const useAuth = () => {
@@ -7,7 +6,7 @@ const useAuth = () => {
         id: 1,
         role_id: 1,
         email: "saddan@gmail",
-        role: "user",
+        role: "technician",
         password: "123"
     }
 

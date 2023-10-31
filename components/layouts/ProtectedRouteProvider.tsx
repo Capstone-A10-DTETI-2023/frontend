@@ -2,6 +2,7 @@ import { useEffect, ReactElement } from 'react';
 import { useRouter } from 'next/router';
 
 import useAuth from '@/hooks/useAuth';
+import { pathIsTechnicianOnly, pathIsAdminOnly, pathIsForAuth } from '@/utils/urlChecker';
 import LoadingPage from '../templates/LoadingPage';
 
 const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes: Array<string> }) => {
@@ -11,24 +12,21 @@ const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes
 
     // Match url string
     const pathIsProtected = props.protectedRoutes.indexOf(router.pathname) !== -1;
-    const pathIsTechnicianOnly = /\/technician/.test(router.pathname);
-    const pathIsAdminOnly = /\/admin/.test(router.pathname);
-    const pathIsForAuth = /\/auth/.test(router.pathname);
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated && pathIsProtected) {
             router.push('/auth/signin');
         }
 
-        if (!isLoading && isAuthenticated && pathIsForAuth) {
+        if (!isLoading && isAuthenticated && pathIsForAuth(router.pathname)) {
             router.push('/dashboard');
         }
 
-        if ((!(userRole === 'admin') && pathIsAdminOnly) || (!(userRole === 'technician') && pathIsTechnicianOnly)) {
+        if ((!(userRole === 'admin') && pathIsAdminOnly(router.pathname)) || (!(userRole === 'technician') && pathIsTechnicianOnly(router.pathname))) {
             router.push('/access-denied');
         }
 
-    }, [isLoading, isAuthenticated, pathIsProtected, pathIsForAuth, pathIsAdminOnly, pathIsTechnicianOnly]);
+    }, [isLoading, isAuthenticated, pathIsProtected, pathIsForAuth, pathIsAdminOnly(router.pathname), pathIsTechnicianOnly(router.pathname)]);
 
 
 

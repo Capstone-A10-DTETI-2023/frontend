@@ -11,7 +11,7 @@ import {
     Text,
     Link,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 

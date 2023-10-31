@@ -2,6 +2,7 @@ import getConfig from "next/config";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Navbar from "../templates/Navbar";
+import { pathIsForAuth } from "@/utils/urlChecker";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -29,7 +30,6 @@ const RootLayout = ({ children, ...customMeta }: LayoutProps) => {
     ...customMeta,
   };
 
-  const pathIsForAuth = /\/auth/.test(router.pathname);
   const isRoot = router.asPath === '/' || router.asPath === '';
 
   return (
@@ -85,7 +85,7 @@ const RootLayout = ({ children, ...customMeta }: LayoutProps) => {
         <title key="title">{meta.title}</title>
       </Head>
       <main className="py-24 mx-auto w-full container">
-        {!pathIsForAuth && <Navbar />}
+        {!pathIsForAuth(router.pathname) && <Navbar />}
         {children}
       </main>
     </>
