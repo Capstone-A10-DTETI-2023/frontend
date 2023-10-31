@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import getConfig from 'next/config';
-import useAuth from "@/hooks/useAuth";
-import LoadingPage from '@/components/templates/LoadingPage';
 
-import Layout from '@/components/layouts/RootLayout';
 import {
     Alert,
     AlertIcon,

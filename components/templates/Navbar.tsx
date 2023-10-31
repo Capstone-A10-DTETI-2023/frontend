@@ -16,7 +16,7 @@ import {
 const Navbar = () => {
     return (
         <>
-            <div className="w-full fixed top-0 left-0 right-0 bg-white p-4 shadow">
+            <div className="w-full fixed z-[99999999999] top-0 left-0 right-0 bg-white p-4 shadow">
                 <ul className="w-full container mx-auto flex flex-row font-semibold text-base justify-between items-center">
                     <li className="text-lg font-extrabold" >
                         <Link href={'/'}>A10</Link>
