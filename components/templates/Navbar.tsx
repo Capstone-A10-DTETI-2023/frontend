@@ -72,7 +72,7 @@ const Navbar = () => {
                         {navbarItems && navbarItems
                             ?.filter((navbarItem) => navbarItem.roles.includes(role ?? 'user'))
                             ?.map((navbarItem) =>
-                                <Link className="text-gray-800 text-center min-w-max" href={navbarItem?.url}>{navbarItem?.name}</Link>
+                                <Link className="text-gray-800 text-center min-w-max" key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.name}</Link>
                             )}
                         <InputGroup>
                             <Input placeholder='Search your node here..' />
@@ -111,45 +111,6 @@ const Navbar = () => {
                             />
                         </div>
                     </li>
-
-                    {/* <li>
-                        <InputGroup>
-                            <Input placeholder='Search your node here..' />
-                            <InputRightElement>
-                                <Icon as={MdSearch} />
-                            </InputRightElement>
-                        </InputGroup>
-                    </li>
-                    <li>
-                        <Button colorScheme='blue'>Search</Button>
-                    </li>
-                    <li>
-                        <div className="wrapper relative cursor-pointer">
-                            <div className="absolute top-0 -right-1 w-5 h-5 flex items-center justify-center bg-green-500 rounded-full outline outline-2 outline-white">
-                                <p className="text-white text-sm">{3}</p>
-                            </div>
-                            <IconButton
-                                className="relative -z-10"
-                                isRound={true}
-                                variant={'ghost'}
-                                colorScheme='blue'
-                                aria-label='Account'
-                                fontSize={32}
-                                icon={<MdNotifications />}
-                            />
-                        </div>
-                    </li>
-                    <li>
-                        <IconButton
-                            isRound={true}
-                            variant={'ghost'}
-                            colorScheme='blue'
-                            aria-label='Account'
-                            fontSize={36}
-                            icon={<MdAccountCircle />}
-                        />
-
-                    </li> */}
                 </ul>
             </div>
         </>

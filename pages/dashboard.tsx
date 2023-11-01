@@ -5,6 +5,7 @@ import {
     Alert,
     AlertIcon,
 } from '@chakra-ui/react'
+import LineChart from '@/components/templates/charts/LineChart';
 
 const { publicRuntimeConfig } = getConfig();
 const { name } = publicRuntimeConfig.site;

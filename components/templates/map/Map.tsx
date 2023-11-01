@@ -6,12 +6,13 @@ import {
     ZoomControl,
     Polyline
 } from "react-leaflet";
+import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
 import { NodeLocation } from "@/types/NodeLocation";
-import { LatLngExpression } from "leaflet";
+import PopupMap from "@/components/templates/map/PopupMap";
 
 const Map = () => {
 
@@ -63,9 +64,13 @@ const Map = () => {
                 <ZoomControl position="bottomright" />
                 <Polyline pathOptions={{ color: 'blue' }} positions={polylineNodes} />
                 {nodes && nodes?.map((node) =>
-                    <Marker position={node?.position}>
-                        <Popup>
-                            {node?.name}
+                    <Marker key={node?.id} position={node?.position}>
+                        <Popup className="rounded-sm">
+                            <PopupMap.Container>
+                                <PopupMap.Title>{node?.name}</PopupMap.Title>
+                                <PopupMap.Information />
+                                <PopupMap.Button />
+                            </PopupMap.Container>
                         </Popup>
                     </Marker>
                 )}

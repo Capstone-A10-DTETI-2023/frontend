@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import LoadingPage from "@/components/templates/LoadingPage";
 const MapComponent = dynamic(
-    () => { return import("@/components/elements/Map") },
+    () => { return import("@/components/templates/map/Map") },
     {
-        loading: () => <LoadingPage />,
+        loading: () => <LoadingPage>Load the map..</LoadingPage>,
         ssr: false
     }
 )
