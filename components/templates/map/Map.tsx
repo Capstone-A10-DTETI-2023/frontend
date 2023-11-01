@@ -68,6 +68,7 @@ const Map = () => {
                         <Popup className="rounded-sm">
                             <PopupMap.Container>
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>
+                                <PopupMap.Alert />
                                 <PopupMap.Information />
                                 <PopupMap.Button />
                             </PopupMap.Container>

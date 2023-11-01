@@ -3,6 +3,10 @@ import { memo } from 'react';
 import LineChart from '@/components/templates/charts/LineChart';
 import {
     Button as ChakraUIButton,
+    Alert as ChakraUIAlert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
 } from "@chakra-ui/react";
 
 const Container = ({ children }: { children: JSX.Element | Array<JSX.Element> }) => {
@@ -28,7 +32,15 @@ const Title = ({ children }: { children: string }) => {
 const Alert = () => {
     return (
         <>
-            <p>This is alert</p>
+            <ChakraUIAlert status='error'>
+                <AlertIcon />
+                <div id="alert-box">
+                    <AlertTitle>Leakage Detected!</AlertTitle>
+                    <AlertDescription>
+                        A leakage detected in Node_4, Tap to see more details.
+                    </AlertDescription>
+                </div>
+            </ChakraUIAlert>
         </>
     )
 }
@@ -48,7 +60,7 @@ const Information = () => {
         <>
             <div id="popup-map-information" className='w-full flex flex-col space-y-3'>
                 <Chart />
-                <div id="sensor-information" className='flex space-x-4 mx-auto'>
+                <div id="sensor-information" className='flex gap-3 mx-auto'>
                     <p>pH: {0}</p>
                     <p>turbidity: {0}</p>
                     <p>temp: {0}</p>
