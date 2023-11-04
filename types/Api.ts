@@ -9,7 +9,7 @@ export type ResponseDatum<T> = {
 }
 
 export type FetchResponse<T> = {
-    data: ResponseData<T>;
+    data: ResponseData<T> | ResponseDatum<T>;
     error: { status: number, message: string } | null;
     isLoading: boolean;
 }

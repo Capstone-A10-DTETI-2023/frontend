@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react'
 import { FetchResponse } from "@/types/Api"
 import axios, { AxiosError } from "axios";
 
-const fetcher = axios.create({
-    withCredentials: true
-});
-
-
 export const useFetch = <T>(url: string): FetchResponse<T> => {
     const [data, setData] = useState<FetchResponse<T>['data']>({ message: '', data: null });
     const [error, setError] = useState<FetchResponse<T>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const fetcher = axios.create({
+        withCredentials: true
+    });
 
     useEffect(() => {
         const fetchData = async () => {

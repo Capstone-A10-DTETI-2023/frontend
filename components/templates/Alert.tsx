@@ -11,7 +11,7 @@ const Error = ({ children }: { children: string }) => {
         <>
             <Alert status='error'>
                 <AlertIcon />
-                <AlertTitle>There was an error processing your request</AlertTitle>
+                <AlertTitle>Error!</AlertTitle>
                 <AlertDescription>{children}</AlertDescription>
             </Alert>
         </>

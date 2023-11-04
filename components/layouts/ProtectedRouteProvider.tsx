@@ -7,13 +7,15 @@ import LoadingPage from '../templates/LoadingPage';
 
 const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes: Array<string> }) => {
     const router = useRouter();
-    const { isAuthenticated, isLoading, getRole } = useAuth();
+    const { isLoading, getRole } = useAuth();
     const userRole = getRole();
 
     // Match url string
     const pathIsProtected = props.protectedRoutes.indexOf(router.pathname) !== -1;
 
     useEffect(() => {
+        const isAuthenticated = sessionStorage.getItem('user');
+
         if (!isLoading && !isAuthenticated && pathIsProtected) {
             router.push('/auth/signin');
         }
@@ -26,13 +28,11 @@ const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes
             router.push('/access-denied');
         }
 
-    }, [isLoading, isAuthenticated, pathIsProtected, pathIsForAuth, pathIsAdminOnly(router.pathname), pathIsTechnicianOnly(router.pathname)]);
-
-
+    }, [isLoading, pathIsProtected, pathIsForAuth, pathIsAdminOnly(router.pathname), pathIsTechnicianOnly(router.pathname)]);
 
     return (
         <>
-            {(isLoading || !isAuthenticated) && pathIsProtected && <LoadingPage>Loading Page..</LoadingPage>}
+            {isLoading && pathIsProtected && <LoadingPage>Loading Page..</LoadingPage>}
             {props.children}
         </>
     );

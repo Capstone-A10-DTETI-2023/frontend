@@ -7,7 +7,7 @@ import { useFetch } from '@/hooks/useFetch';
 import { Node as NodeType } from '@/types/Node';
 import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';
-import Alert from '@/components/Alert';
+import Alert from '@/components/templates/Alert';
 
 const Breadcrumb = dynamic(
     () => { return import("@/components/templates/Breadcrumb") },

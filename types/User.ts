@@ -1,7 +1,10 @@
 export type User = {
     id: number;
     role_id: number;
-    role: string;
+    accessToken: string;
+}
+
+export type UserPayload = {
     email: string;
     password: string;
 }

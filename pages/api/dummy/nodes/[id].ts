@@ -14,7 +14,8 @@ export default function handler(
     res.status(200).json(
         {
             message: 'success',
-            data: nodes.find((node) => node.id === req.query.id)
+            data: nodes.find((node) => node.id === id)!
         }
     )
+
 }
