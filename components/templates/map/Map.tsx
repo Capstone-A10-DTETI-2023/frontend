@@ -11,12 +11,13 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
-import { NodeLocation } from "@/types/NodeLocation";
+import { Nodes } from "@/types/Nodes";
 import PopupMap from "@/components/templates/map/PopupMap";
+
 
 const Map = () => {
 
-    const nodes: Array<NodeLocation> = [
+    const nodes: Array<Nodes> = [
         {
             id: '1',
             position: [-7.766373977737371, 110.37312759986223],
@@ -39,7 +40,7 @@ const Map = () => {
         },
     ];
 
-    const polylineNodes: Array<LatLngExpression> = nodes?.map((node, i) => {
+    const polylineNodes: Array<Nodes['position']> = nodes?.map((node, i) => {
         return node?.position;
     });
     polylineNodes?.push(nodes[0]?.position);

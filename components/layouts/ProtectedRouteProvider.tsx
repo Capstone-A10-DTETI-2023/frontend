@@ -32,7 +32,7 @@ const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes
 
     return (
         <>
-            {(isLoading || !isAuthenticated) && pathIsProtected && <LoadingPage />}
+            {(isLoading || !isAuthenticated) && pathIsProtected && <LoadingPage>Loading Page..</LoadingPage>}
             {props.children}
         </>
     );

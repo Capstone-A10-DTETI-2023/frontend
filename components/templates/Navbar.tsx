@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
     InputGroup,
     Input,
@@ -15,64 +16,59 @@ import {
 
 import useAuth from "@/hooks/useAuth";
 
-type NavbarItem = { id: string, url: string; name: string, roles: Array<string> }
+type NavbarItem = { id: string, url: string; label: string, roles: Array<string> }
 
 const Navbar = () => {
 
     const { isLoading, getRole } = useAuth();
+    const router = useRouter();
     const role = getRole();
 
     const navbarItems: Array<NavbarItem> = [
         {
             id: 'dashboard',
             url: '/dashboard',
-            name: 'Dashboard',
+            label: 'Dashboard',
             roles: ['user', 'technician', 'admin']
         },
         {
             id: 'map',
             url: '/map',
-            name: 'Map View',
+            label: 'Map View',
             roles: ['user', 'technician', 'admin']
         },
         {
             id: 'controls',
-            url: '/technician/controls',
-            name: 'Controls',
+            url: '/technician/nodes',
+            label: 'Nodes',
             roles: ['technician']
         },
         {
-            id: 'adminControls',
-            url: '/admin/admin-controls',
-            name: 'Controls',
-            roles: ['admin']
-        },
-        {
             id: 'manageNodes',
-            url: '/admin/manage-nodes',
-            name: 'Manage Nodes',
+            url: '/admin/nodes',
+            label: 'Nodes',
             roles: ['admin']
         },
         {
             id: 'manageUser',
             url: '/admin/manage-user',
-            name: 'Manage User',
+            label: 'Manage User',
             roles: ['admin']
         },
 
     ];
     return (
         <>
-            <div className="w-full fixed z-[99999999999] top-0 left-0 right-0 bg-white p-4 shadow">
+            <div className="transition-all w-full fixed z-[99999999999] top-0 left-0 right-0 bg-white shadow-md">
                 <ul className="w-full container mx-auto flex flex-row font-semibold text-sm justify-between items-center">
-                    <li className="text-lg font-extrabold" >
+                    <li className="text-lg font-extrabold py-4" >
                         <Link href={'/'}>A10</Link>
                     </li>
                     <li className="flex items-center space-x-8">
                         {navbarItems && navbarItems
                             ?.filter((navbarItem) => navbarItem.roles.includes(role ?? 'user'))
                             ?.map((navbarItem) =>
-                                <Link className="text-gray-800 text-center min-w-max" key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.name}</Link>
+                                <Link className={`text-center py-4 h-full min-w-max ${navbarItem.url === router.pathname && 'font-bold text-sky-600 underline underline-offset-8'}`} key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.label}</Link>
                             )}
                         <InputGroup>
                             <Input placeholder='Search your node here..' />
@@ -81,9 +77,11 @@ const Navbar = () => {
                             </InputRightElement>
                         </InputGroup>
 
-                        <Button width={'fit-content'} paddingX={12} colorScheme='blue'>Search</Button>
+                        <div id="button-wrapper" className="w-fit py-4">
+                            <Button colorScheme='blue'>Search</Button>
+                        </div>
 
-                        <div className="notification-wrapper">
+                        <div className="notification-wrapper py-4">
                             <div className="relative cursor-pointer">
                                 <div className="absolute top-0 -right-1 w-5 h-5 flex items-center justify-center bg-green-500 rounded-full outline outline-2 outline-white">
                                     <p className="text-white text-sm">{3}</p>
@@ -100,7 +98,7 @@ const Navbar = () => {
                             </div>
                         </div>
 
-                        <div className="profile-wrapper">
+                        <div className="profile-wrapper py-4">
                             <IconButton
                                 isRound={true}
                                 variant={'ghost'}

@@ -1,7 +1,7 @@
 import React from "react";
 import EChartsReact from "echarts-for-react";
 
-const LineChart: React.FC = () => {
+const LineChart = ({ height }: { height: number }) => {
     const options = {
         grid: { top: 8, right: 8, bottom: 24, left: 36 },
         xAxis: {
@@ -25,7 +25,7 @@ const LineChart: React.FC = () => {
 
     return (
         <>
-            <EChartsReact option={options} style={{ maxHeight: 200 }} />
+            <EChartsReact option={options} style={{ maxHeight: height, maxWidth: '100%' }} />
         </>
     );
 }

@@ -49,7 +49,7 @@ const Chart = () => {
     return (
         <>
             <div id="chart-wrapper" className='w-full'>
-                <LineChart />
+                <LineChart height={200} />
             </div>
         </>
     )

@@ -1,9 +1,8 @@
 const PROTECTED_ROUTES: Array<string> = [
     '/dashboard',
     '/admin/manage-user',
-    '/admin/admin-controls',
-    '/admin/manage-nodes',
-    '/technician/controls',
+    '/admin/nodes',
+    '/technician/nodes',
     '/monitoring',
     '/profile',
     '/notification',
