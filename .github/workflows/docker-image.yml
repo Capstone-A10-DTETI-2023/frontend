@@ -12,7 +12,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v3
     - name: Delete Docker Container
-      run: docker compose -f ./docker/be.docker-compose.yml down
+      run: docker compose -f ./docker/docker-compose.yml down
     - name: Clean Docker Image
       run: docker rmi -f yosefadi/capstone_fe:latest
     - name: Run Docker Container
