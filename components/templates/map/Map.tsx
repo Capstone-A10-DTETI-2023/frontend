@@ -11,39 +11,39 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
-import { Nodes } from "@/types/Nodes";
+import { Node } from "@/types/Node";
 import PopupMap from "@/components/templates/map/PopupMap";
 
 
 const Map = () => {
 
-    const nodes: Array<Nodes> = [
+    const nodes: Array<Node> = [
         {
             id: '1',
-            position: [-7.766373977737371, 110.37312759986223],
+            coordinate: [-7.766373977737371, 110.37312759986223],
             name: 'Node1 - DTNTF'
         },
         {
             id: '2',
-            position: [-7.765760581978385, 110.37137545686188],
+            coordinate: [-7.765760581978385, 110.37137545686188],
             name: 'Node2 - DTMI'
         },
         {
             id: '3',
-            position: [-7.7639640348042045, 110.37159539603437],
+            coordinate: [-7.7639640348042045, 110.37159539603437],
             name: 'Node3 - DTAP'
         },
         {
             id: '4',
-            position: [-7.764607173843711, 110.37381626685878],
+            coordinate: [-7.764607173843711, 110.37381626685878],
             name: 'Node4 - DTSL'
         },
     ];
 
-    const polylineNodes: Array<Nodes['position']> = nodes?.map((node, i) => {
-        return node?.position;
+    const polylineNodes: Array<Node['coordinate']> = nodes?.map((node, i) => {
+        return node?.coordinate;
     });
-    polylineNodes?.push(nodes[0]?.position);
+    polylineNodes?.push(nodes[0]?.coordinate);
 
     return (
         <>
@@ -55,7 +55,7 @@ const Map = () => {
                     bottom: 0,
                     position: 'fixed'
                 }}
-                center={nodes[0]?.position}
+                center={nodes[0]?.coordinate}
                 zoom={16}
                 scrollWheelZoom={true}>
                 <TileLayer
@@ -65,7 +65,7 @@ const Map = () => {
                 <ZoomControl position="bottomright" />
                 <Polyline pathOptions={{ color: 'blue' }} positions={polylineNodes} />
                 {nodes && nodes?.map((node) =>
-                    <Marker key={node?.id} position={node?.position}>
+                    <Marker key={node?.id} position={node?.coordinate}>
                         <Popup className="rounded-sm">
                             <PopupMap.Container>
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>

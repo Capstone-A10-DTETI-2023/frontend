@@ -10,6 +10,8 @@ module.exports = {
       description: 'Capstone A-10',
       socialPreview: '/images/preview.png',
     },
+    baseUrl: process.env.BASEURL,
+    localUrl: process.env.LOCALURL
   },
   swcMinify: true,
   i18n: {
@@ -19,8 +21,8 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
-        destination: `${process.env.API_SOURCE}:path*`,
+        source: "/api/v2/:path*",
+        destination: `${process.env.BASEURL}:path*`,
       },
     ];
   },

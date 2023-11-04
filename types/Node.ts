@@ -1,8 +1,8 @@
 import { LatLngExpression } from "leaflet";
 
-export type Nodes = {
+export type Node = {
     id: number | string;
-    position: LatLngExpression;
+    coordinate: LatLngExpression;
     name: string;
 }
 
