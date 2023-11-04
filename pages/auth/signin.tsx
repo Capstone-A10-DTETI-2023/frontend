@@ -30,12 +30,14 @@ const SignIn = () => {
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
+
         await signIn(payload);
         await router.push('/dashboard');
     }
 
     return (
         <section className="fixed top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center space-y-8">
+            {user && user?.email}
             <div className="head-text">
                 <h1 className='text-center font-extrabold text-4xl'>Sign in to your account!</h1>
             </div>

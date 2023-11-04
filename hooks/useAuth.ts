@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios, { AxiosError } from "axios";
 import { User, UserPayload } from "types/User"
 import { FetchResponse } from "@/types/Api"
-import { useRouter } from "next/router";
+
 
 const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -14,9 +14,15 @@ const useAuth = () => {
     const signIn = async (payload: UserPayload) => {
         setIsLoading(true);
         try {
+            /*
+                response = Sign In
+                response2 = User information
+            */
+
             const response = await fetcher.post('/api/v2/auth/login', payload);
-            await setUser(response.data.data);
-            sessionStorage.setItem('user', JSON.stringify(response.data.data));
+            const response2 = await fetcher.get(`/api/v2/users/${response.data.data.id}`);
+            await setUser(response2.data.data);
+            await sessionStorage.setItem('user', JSON.stringify(response2.data.data));
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
@@ -43,12 +49,14 @@ const useAuth = () => {
         }
     }
 
-    const getRole = () => {
-        return 'technician';
-    }
+    useEffect(() => {
+        const data = sessionStorage.getItem('user');
+        const user = JSON.parse(data!) as User | null;
+
+        setUser(user);
+    }, [])
 
     return {
-        getRole,
         isLoading,
         user,
         error,

@@ -1,6 +1,10 @@
 export type User = {
     id: number;
     role_id: number;
+    role_name: string;
+    email: string;
+    name: string;
+    phone_num: string;
     accessToken: string;
 }
 

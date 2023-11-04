@@ -15,46 +15,51 @@ import {
 } from 'react-icons/md'
 
 import useAuth from "@/hooks/useAuth";
-import MenuLogout from "@/components/templates/auth/MenuLogout";
+import MenuProfile from "@/components/templates/auth/MenuProfile";
 
-type NavbarItem = { id: string, url: string; label: string, roles: Array<string> }
+type NavbarItem = {
+    id: string,
+    url: string;
+    label: string,
+    roles: Array<string>
+}
 
 const Navbar = () => {
 
-    const { isLoading, getRole } = useAuth();
+    const { isLoading, user } = useAuth();
     const router = useRouter();
-    const role = getRole();
+    const userRole = user?.role_name
 
     const navbarItems: Array<NavbarItem> = [
         {
             id: 'dashboard',
             url: '/dashboard',
             label: 'Dashboard',
-            roles: ['user', 'technician', 'admin']
+            roles: ['USER', 'TECHNICIAN', 'ADMIN']
         },
         {
             id: 'map',
             url: '/map',
             label: 'Map View',
-            roles: ['user', 'technician', 'admin']
+            roles: ['USER', 'TECHNICIAN', 'ADMIN']
         },
         {
             id: 'controls',
             url: '/technician/nodes',
             label: 'Nodes',
-            roles: ['technician']
+            roles: ['TECHNICIAN']
         },
         {
             id: 'manageNodes',
             url: '/admin/nodes',
             label: 'Nodes',
-            roles: ['admin']
+            roles: ['ADMIN']
         },
         {
             id: 'manageUser',
             url: '/admin/manage-user',
             label: 'Manage User',
-            roles: ['admin']
+            roles: ['ADMIN']
         },
 
     ];
@@ -69,7 +74,7 @@ const Navbar = () => {
                         </li>
                         <li className="flex items-center space-x-8">
                             {navbarItems && navbarItems
-                                ?.filter((navbarItem) => navbarItem.roles.includes(role ?? 'user'))
+                                ?.filter((navbarItem) => navbarItem.roles.includes(userRole ?? 'USER'))
                                 ?.map((navbarItem) =>
                                     <Link className={`text-center py-4 h-full min-w-max ${navbarItem.url === router.pathname && 'font-bold text-sky-600 underline underline-offset-8'}`} key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.label}</Link>
                                 )}
@@ -102,9 +107,9 @@ const Navbar = () => {
                             </div>
                             <div className="profile relative py-4 ">
                                 <div className="icon-wrapper w-fit h-fit rounded-full active:outline outline-sky-300 transition-all">
-                                    <MenuLogout>
+                                    <MenuProfile>
                                         <Icon color={'blue.600'} fontSize={36} as={MdAccountCircle} />
-                                    </MenuLogout>
+                                    </MenuProfile>
                                 </div>
                             </div>
                         </li>

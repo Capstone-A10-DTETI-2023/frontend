@@ -10,16 +10,15 @@ import {
     MdLogout
 } from 'react-icons/md'
 import { useRouter } from "next/router";
-import { forwardRef } from "@chakra-ui/react";
 
 import AlertDialog from "@/components/templates/AlertDialog";
 import useAuth from "@/hooks/useAuth";
 
-const MenuLogout = ({ children }: { children: JSX.Element }) => {
+const MenuProfile = ({ children }: { children: JSX.Element }) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const router = useRouter();
-    const { isLoading, signOut } = useAuth();
+    const { user, isLoading, signOut } = useAuth();
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         await signOut();
@@ -28,8 +27,7 @@ const MenuLogout = ({ children }: { children: JSX.Element }) => {
 
     return (
         <>
-
-            <Menu >
+            <Menu isLazy>
                 <AlertDialog
                     title="Sign Out"
                     description="Are you sure want to sign out?"
@@ -42,8 +40,14 @@ const MenuLogout = ({ children }: { children: JSX.Element }) => {
                     {children}
                 </MenuButton>
                 <MenuList px={2}>
-                    <MenuItem>
-                        Information
+                    <MenuItem onClick={() => router.push('/profile')}>
+                        <div className="profile-menu-wrapper space-y-1">
+                            <h6 className="font-semibold text-lg">Profile</h6>
+                            <p>Name: {user?.name}</p>
+                            <p>Role: {user?.role_name}</p>
+                            <p>Email: {user?.email}</p>
+                            <p>Phone Number: {user?.phone_num}</p>
+                        </div>
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem borderRadius={200} _hover={{ bgColor: 'red.500' }} bgColor={'red.400'} color={'white'} onClick={() => setIsDialogOpen(true)} icon={<MdLogout />}>
@@ -55,4 +59,4 @@ const MenuLogout = ({ children }: { children: JSX.Element }) => {
     );
 }
 
-export default MenuLogout;
+export default MenuProfile;

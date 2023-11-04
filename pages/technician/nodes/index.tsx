@@ -8,14 +8,7 @@ import { Node as NodeType } from '@/types/Node';
 import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
-
-const Breadcrumb = dynamic(
-    () => { return import("@/components/templates/Breadcrumb") },
-    {
-        loading: () => <Skeleton height={5} />,
-        ssr: false
-    }
-)
+import Breadcrumb from '@/components/templates/Breadcrumb';
 
 
 const TechnicianNodes = () => {
