@@ -16,10 +16,10 @@ import { useRouter } from 'next/router'
 
 import useAuth from '@/hooks/useAuth'
 import Alert from '@/components/templates/Alert'
-import { UserPayload } from '@/types/User'
+import { SignInPayload } from '@/types/User'
 
 const SignIn = () => {
-    const [payload, setPayload] = useState<UserPayload>(
+    const [payload, setPayload] = useState<SignInPayload>(
         { email: '', password: '' }
     );
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -37,7 +37,6 @@ const SignIn = () => {
 
     return (
         <section className="fixed top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center space-y-8">
-            {user && user?.email}
             <div className="head-text">
                 <h1 className='text-center font-extrabold text-4xl'>Sign in to your account!</h1>
             </div>
@@ -48,6 +47,7 @@ const SignIn = () => {
                             <FormLabel>Email address</FormLabel>
                             <Input
                                 type="email"
+                                placeholder='john@doe.com'
                                 onChange={(e) => { setPayload({ ...payload, email: e.target.value }) }}
                             />
                         </FormControl>
@@ -55,6 +55,7 @@ const SignIn = () => {
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
                                 <Input
+                                    placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
                                     type={showPassword ? 'text' : 'password'}
                                     onChange={(e) => { setPayload({ ...payload, password: e.target.value }) }}
                                 />
