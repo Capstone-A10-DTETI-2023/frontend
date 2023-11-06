@@ -6,6 +6,11 @@ export type User = {
     name: string;
     phone_num: string;
     accessToken: string;
+    notificationPref: {
+        email: string;
+        whatsapp: string;
+        firebase: string;
+    }
 }
 
 export type SignInPayload = {
@@ -16,6 +21,11 @@ export type SignInPayload = {
 export type SignUpPayload = {
     name: string;
     email: string;
+    phone_num: string;
+}
+
+export type ResetPasswordPayload = {
+    username: string;
     phone_num: string;
 }
 

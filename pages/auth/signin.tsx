@@ -8,11 +8,11 @@ import {
     Button,
     IconButton,
     Text,
-    Link,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import useAuth from '@/hooks/useAuth'
 import Alert from '@/components/templates/Alert'
@@ -25,7 +25,7 @@ const SignIn = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const router = useRouter();
 
-    const { user, isLoading, error, signIn } = useAuth();
+    const { isLoading, error, signIn } = useAuth();
 
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,7 +44,7 @@ const SignIn = () => {
                 <Stack spacing={4}>
                     <form onSubmit={handleSignIn}>
                         <FormControl id="email" isRequired>
-                            <FormLabel>Email address</FormLabel>
+                            <FormLabel>Email Address</FormLabel>
                             <Input
                                 type="email"
                                 placeholder='john@doe.com'
@@ -68,6 +68,10 @@ const SignIn = () => {
                                     </IconButton>
                                 </InputRightElement>
                             </InputGroup>
+                            <div id="reset-password" className="w-full text-right my-2">
+                                <Link href={'/auth/reset-password'} className='text-sm text-blue-500 my-2 text-center' >Forgot Password?</Link>
+                            </div>
+                            <p className='text-sm text-gray-500 my-2' >*Your password is automatically generated and sent via WhatsApp</p>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
                             {!!error && <Alert.Error>{error.message}</Alert.Error>}
@@ -86,7 +90,7 @@ const SignIn = () => {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Dont have account yet? <Link href='/auth/signup' color={'blue.400'}>Sign Up</Link>
+                                Dont have account yet? <Link href={'/auth/signup'} className='text-sm text-blue-500 my-2' >Sign Up</Link>
                             </Text>
                         </Stack>
                     </form>

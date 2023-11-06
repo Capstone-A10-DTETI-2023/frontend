@@ -1,6 +1,6 @@
 
 import { memo } from 'react';
-import LineChart from '@/components/templates/charts/LineChart';
+import Link from 'next/link';
 import {
     Button as ChakraUIButton,
     Alert as ChakraUIAlert,
@@ -8,6 +8,7 @@ import {
     AlertTitle,
     AlertDescription,
 } from "@chakra-ui/react";
+import LineChart from '@/components/templates/charts/LineChart';
 
 const Container = ({ children }: { children: JSX.Element | Array<JSX.Element> }) => {
     return (
@@ -71,11 +72,13 @@ const Information = () => {
     )
 }
 
-const Button = () => {
+const Button = ({ href }: { href: string }) => {
     return (
         <>
             <ChakraUIButton width={'full'} paddingX={12} colorScheme='blue'>
-                See Details
+                <Link href={href}>
+                    <p className='text-white'>See Details</p>
+                </Link>
             </ChakraUIButton>
         </>
     )

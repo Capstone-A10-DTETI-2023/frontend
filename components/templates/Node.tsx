@@ -12,9 +12,11 @@ const Container = ({ children, variant }: { children: JSX.Element | Array<JSX.El
 
     return (
         <>
-            <div id='node-container' className={`flex flex-row justify-between items-center space-x-4 p-4 w-full shadow outline outline-1 rounded-lg ${variant === 'normal' ? `outline-gray-200 bg-white text-black` : `outline-red-500 bg-red-400 text-white`}`
+            <div id='node-container' className={` p-4 w-full shadow outline outline-1 rounded-lg ${variant === 'normal' ? `outline-gray-200 bg-white text-black` : `outline-red-500 bg-red-400 text-white`}`
             }>
-                {children}
+                <div className='flex flex-row justify-between items-center space-x-4 w-full'>
+                    {children}
+                </div>
             </div>
         </>
     );
@@ -24,7 +26,7 @@ const Title = ({ children }: { children: string }) => {
     return (
         <>
             <div id="icon-wrapper">
-                <Icon fontSize={24} as={MdLocationPin} />
+                <Icon fontSize={24} as={MdLocationPin} color={'teal.400'} />
             </div>
             <p className="font-bold text-lg w-fit">
                 {children}
@@ -37,8 +39,13 @@ const Information = ({ children }: { children: string }) => {
     return (
         <>
             <div id="node-information" className="flex flex-row gap-4">
-                {children}
-                <div id="chart-wrapper" className='w-[40vw]'>
+                <div id="sensor-information" className='outline outline-1 outline-gray-200 rounded-md p-4'>
+                    <h6 className='font-semibold mb-2' >Sensor Data:</h6>
+                    <div id="sensor-data" className='bg-teal-500 rounded-md p-2 text-white'>
+                        {children}
+                    </div>
+                </div>
+                <div id="chart-wrapper" className='w-[50vw]'>
                     <LineChart height={100} />
                 </div>
             </div>

@@ -6,37 +6,48 @@ import {
     ZoomControl,
     Polyline
 } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
 import { Node } from "@/types/Node";
 import PopupMap from "@/components/templates/map/PopupMap";
+import useAuth from "@/hooks/useAuth";
 
 
 const Map = () => {
+
+    const { user } = useAuth();
+    const userRolePath = user?.role_name.toLowerCase();
 
     const nodes: Array<Node> = [
         {
             id: '1',
             coordinate: [-7.766373977737371, 110.37312759986223],
-            name: 'Node1 - DTNTF'
+            name: 'Node1 - DTNTF',
+            calc_leakage: true,
+            leakage_sens: 0.8
         },
         {
             id: '2',
             coordinate: [-7.765760581978385, 110.37137545686188],
-            name: 'Node2 - DTMI'
+            name: 'Node2 - DTMI',
+            calc_leakage: true,
+            leakage_sens: 0.8
         },
         {
             id: '3',
             coordinate: [-7.7639640348042045, 110.37159539603437],
-            name: 'Node3 - DTAP'
+            name: 'Node3 - DTAP',
+            calc_leakage: true,
+            leakage_sens: 0.8
         },
         {
             id: '4',
             coordinate: [-7.764607173843711, 110.37381626685878],
-            name: 'Node4 - DTSL'
+            name: 'Node4 - DTSL',
+            calc_leakage: true,
+            leakage_sens: 0.8
         },
     ];
 
@@ -71,7 +82,7 @@ const Map = () => {
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>
                                 <PopupMap.Alert />
                                 <PopupMap.Information />
-                                <PopupMap.Button />
+                                <PopupMap.Button href={`/${userRolePath}/nodes/${node?.id}`} />
                             </PopupMap.Container>
                         </Popup>
                     </Marker>

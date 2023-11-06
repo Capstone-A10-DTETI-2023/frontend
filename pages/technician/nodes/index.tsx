@@ -13,7 +13,7 @@ import Breadcrumb from '@/components/templates/Breadcrumb';
 
 const TechnicianNodes = () => {
 
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes');
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useSessionStorage: true });
 
     if (error) alert(error.message);
 
