@@ -25,7 +25,10 @@ const LineChart = ({ height }: { height: number }) => {
 
     return (
         <>
-            <EChartsReact option={options} style={{ maxHeight: height, maxWidth: '100%' }} />
+            <EChartsReact
+                option={options}
+                style={{ maxHeight: height, width: '100%' }}
+            />
         </>
     );
 }

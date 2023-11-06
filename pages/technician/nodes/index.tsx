@@ -1,7 +1,5 @@
-import {
-    Skeleton,
-} from '@chakra-ui/react'
-import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
+import { useToast } from '@chakra-ui/react';
 
 import { useFetch } from '@/hooks/useFetch';
 import { Node as NodeType } from '@/types/Node';
@@ -13,9 +11,21 @@ import Breadcrumb from '@/components/templates/Breadcrumb';
 
 const TechnicianNodes = () => {
 
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useSessionStorage: true });
+    const toast = useToast();
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true });
 
-    if (error) alert(error.message);
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: 'Error!',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [error])
+
 
     return (
         <>
@@ -29,10 +39,8 @@ const TechnicianNodes = () => {
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
                     <Node.Container key={i} variant='normal'>
-                        <div id="left-content-wrapper" className='flex flex-row space-x-4 items-center'>
-                            <Node.Title>{node.name}</Node.Title>
-                            <Node.Information>Information</Node.Information>
-                        </div>
+                        <Node.Title>{node.name}</Node.Title>
+                        <Node.Information>Information</Node.Information>
                         <Node.Button href={`/technician/nodes/${node.id}`} />
                     </Node.Container>
                 )}

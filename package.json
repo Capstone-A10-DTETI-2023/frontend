@@ -27,6 +27,7 @@
     "echarts-for-react": "^3.0.2",
     "eslint-config-next": "^13.5.6",
     "framer-motion": "^10.16.4",
+    "idb": "^7.1.1",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "^13.5.6",

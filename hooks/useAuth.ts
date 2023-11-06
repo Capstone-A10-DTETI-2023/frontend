@@ -40,7 +40,7 @@ const useAuth = () => {
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
-            console.log(error);
+            console.log(error.message);
         }
         finally {
             setIsLoading(false);
@@ -54,7 +54,7 @@ const useAuth = () => {
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
-            console.log(error);
+            console.log(error.message);
         }
         finally {
             setIsLoading(false);
@@ -70,7 +70,7 @@ const useAuth = () => {
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
-            console.log(error);
+            console.log(error.message);
         }
         finally {
             setIsLoading(false);
@@ -84,7 +84,7 @@ const useAuth = () => {
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
-            console.log(error);
+            console.log(error.message);
         }
         finally {
             setIsLoading(false);
