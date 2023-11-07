@@ -72,12 +72,12 @@ const ResetPassword = () => {
                                 _hover={{
                                     bg: 'blue.500',
                                 }}>
-                                Sign in
+                                Reset Password
                             </Button>
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Dont have account yet? <Link href={'/auth/signup'} className='text-sm text-blue-500 my-2' >Sign Up</Link>
+                                Dont have account yet? <Link href={'/auth/signup'} className='text-sm text-blue-500 my-2'>Sign Up</Link>
                             </Text>
                         </Stack>
                     </form>

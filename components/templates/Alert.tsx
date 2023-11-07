@@ -5,6 +5,7 @@ import {
     AlertDescription,
 } from "@chakra-ui/react";
 import { memo } from "react";
+import Link from 'next/link'
 
 const Error = ({ children }: { children: string }) => {
     return (
@@ -29,7 +30,7 @@ const LeakageDetected = ({ children }: { children: string }) => {
                         {children}
                     </AlertDescription>
                     <AlertDescription>
-                        Contact technician for any further mitigation
+                        <Link href={'/'}>Send notification to technician for any further mitigation</Link>
                     </AlertDescription>
                 </div>
             </Alert>

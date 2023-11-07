@@ -71,7 +71,6 @@ const SignIn = () => {
                             <div id="reset-password" className="w-full text-right my-2">
                                 <Link href={'/auth/reset-password'} className='text-sm text-blue-500 my-2 text-center' >Forgot Password?</Link>
                             </div>
-                            <p className='text-sm text-gray-500 my-2' >*Your password is automatically generated and sent via WhatsApp</p>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
                             {!!error && <Alert.Error>{error.message}</Alert.Error>}

@@ -40,7 +40,33 @@ const NodeDetails = () => {
             alarm_high: 90
         },
     ];
-    const isLeakage = false; // Fetch from backend
+    const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
+        {
+            id: 'last-value',
+            label: 'Last Value',
+            value: 20,
+            unit: 'psi'
+        },
+        {
+            id: 'max-value',
+            label: 'Max Value',
+            value: 28.2,
+            unit: 'psi'
+        },
+        {
+            id: 'min-value',
+            label: 'Min Value',
+            value: 20.1,
+            unit: 'psi'
+        },
+        {
+            id: 'avg-value',
+            label: 'Avg Value',
+            value: 23.7,
+            unit: 'psi'
+        },
+    ]
+    const isLeakage: boolean = true; // Fetch from backend
 
     const [selectedSensor, setSelectedSensor] = useState<string>(sensors[0].name);
     const [selectedLimit, setSelectedLimit] = useState<number>();
@@ -60,12 +86,14 @@ const NodeDetails = () => {
                 <Breadcrumb />
             </div>
             <h3 id='node-details-title' className="font-semibold text-3xl text-sky-700 mb-6">PNU <span className='font-bold'>{node?.name}</span></h3>
-            {isLeakage &&
-                <Alert.LeakageDetected>
-                    {`A leakage on ${node?.name} detected around 10.03 GMT+7, 11/09/2023`}
-                </Alert.LeakageDetected>
-            }
-            <div id="node-details-information" className='w-full bg-white outline outline-1 outline-gray-200 shadow h-96'>
+            <div id="alert-leakage" className='mb-6'>
+                {isLeakage &&
+                    <Alert.LeakageDetected>
+                        {`A leakage on ${node?.name} detected around 10.03 GMT+7, 11/09/2023`}
+                    </Alert.LeakageDetected>
+                }
+            </div>
+            <div id="node-details-information" className='w-full bg-white outline outline-1 outline-gray-200 shadow-md h-96 mb-6 rounded-md'>
                 <div id="node-details-information-wrapper" className='p-6'>
                     <div id="control-bar" className='mb-8'>
                         <div id="top-content-wrapper" className="flex flex-row justify-between w-full mb-4">
@@ -95,6 +123,15 @@ const NodeDetails = () => {
                         <LineChart height={200} />
                     </div>
                 </div>
+            </div>
+            <div id="sensor-values" className='w-full flex flex-row gap-4'>
+                {sensorStats && sensorStats.map((sensorStat) =>
+                    <div id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
+                        <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
+                        <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>
+                        <h6 className='font-semibold text-lg' >{sensorStat.label}</h6>
+                    </div>
+                )}
             </div>
         </>
     );
