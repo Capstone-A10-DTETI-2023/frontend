@@ -18,7 +18,7 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
 
     const [isValueChanged, setIsValueChanged] = useState<boolean>(false);
     const { user } = useUser();
-    const { isLoading, error, updateNotifPref } = useNotification();
+    const { notification, isLoading, error, updateNotifPref } = useNotification();
     const toast = useToast();
 
     useEffect(() => {
@@ -31,7 +31,17 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
                 isClosable: true,
             })
         }
-    }, [error])
+
+        if (notification) {
+            toast({
+                title: 'Success!',
+                description: 'Notification Preferences Updated',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [error, notification])
 
     const [payload, setPayload] = useState<Notification>(
         {
@@ -64,6 +74,7 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
         e.stopPropagation();
 
         await updateNotifPref({ payload, id: user?.id! });
+        setIsValueChanged(false);
     }
 
     return (
@@ -111,8 +122,7 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
                                     <SlideFade in={isValueChanged} offsetY='-20px'>
                                         <div id="button-change-wrapper" className='space-x-1'>
                                             <Button
-                                                bgColor={'blue.400'}
-                                                color={'white'}
+                                                colorScheme='blue'
                                                 loadingText="Saving.."
                                                 isLoading={isLoading}
                                                 type='submit'
@@ -121,13 +131,13 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
                                                 Save Changes
                                             </Button>
                                             <Button
+                                                loadingText="Cancel"
                                                 isLoading={isLoading}
                                                 type='button'
                                                 size={'sm'}
                                                 variant={'outline'}
                                                 onClick={(e) => {
                                                     setPayload({ ...firstPayload });
-                                                    // setIsValueChanged(false);
                                                 }}
                                             >
                                                 Cancel
