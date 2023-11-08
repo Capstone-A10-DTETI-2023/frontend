@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Menu,
     MenuButton,
@@ -13,12 +13,15 @@ import { useRouter } from "next/router";
 
 import AlertDialog from "@/components/templates/AlertDialog";
 import useAuth from "@/hooks/useAuth";
+import useUser from "@/hooks/useUser";
 
 const MenuProfile = ({ children }: { children: JSX.Element }) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const router = useRouter();
-    const { user, isLoading, signOut } = useAuth();
+    const { isLoading, signOut } = useAuth();
+    const { user } = useUser();
+
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         await signOut();

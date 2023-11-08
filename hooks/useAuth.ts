@@ -2,41 +2,38 @@ import { useEffect, useState } from "react"
 import { AxiosError } from "axios";
 
 import { User, SignInPayload, SignUpPayload, ResetPasswordPayload } from "@/types/User"
-import { FetchResponse } from "@/types/Api"
+import { FetchResponse } from "@/types/Api";
 import fetcher from "@/services/fetcher";
+import useNotification from "@/hooks/useNotification";
+import useUser from "@/hooks/useUser";
 
 
 const useAuth = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [error, setError] = useState<FetchResponse<User>['error']>(null);
+    const { user, setUser, getMe } = useUser();
+    const [error, setError] = useState<FetchResponse<User | Notification>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { getNotifPref } = useNotification();
 
     const signIn = async (payload: SignInPayload) => {
         setIsLoading(true);
         try {
-            /*
-                response = Sign In
-                response2 = User information
-                response3 = Notif Preferences
-            */
 
             const response = await fetcher.post('/api/v2/auth/login', payload);
 
-            const response2 = await fetcher.get(`/api/v2/users/${response.data.data.id}`);
-            const response3 = await fetcher.get(`/api/v2/notif/user/${response.data.data.id}`);
+            const me = await getMe({ id: response.data.data.id });
+            const notifPrefs = await getNotifPref({ id: response.data.data.id });
 
-
-            const user: User = await {
-                ...response2.data.data,
+            const newUser: User = await {
+                ...me,
                 notificationPref: {
-                    email: response3.data.data.email,
-                    whatsapp: response3.data.data.whatsapp,
-                    firebase: response3.data.data.firebase
+                    email: notifPrefs?.email,
+                    whatsapp: notifPrefs?.whatsapp,
+                    firebase: notifPrefs?.firebase
                 }
-            }
+            };
 
-            await setUser(user);
-            await sessionStorage.setItem('user', JSON.stringify(user));
+            await setUser(newUser);
+            await sessionStorage.setItem('user', JSON.stringify(newUser));
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });
@@ -91,21 +88,16 @@ const useAuth = () => {
         }
     }
 
-    useEffect(() => {
-        const data = sessionStorage.getItem('user');
-        const user = JSON.parse(data!) as User | null;
-
-        setUser(user);
-    }, [])
 
     return {
         isLoading,
-        user,
         error,
+        setUser,
         resetPassword,
         signIn,
         signOut,
-        signUp
+        signUp,
+        getMe
     }
 }
 

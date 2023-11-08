@@ -13,10 +13,11 @@ import {
     MdAccountCircle,
     MdNotifications
 } from 'react-icons/md'
+import { useEffect } from 'react'
 
-import useAuth from "@/hooks/useAuth";
 import MenuProfile from "@/components/templates/auth/MenuProfile";
 import MenuNotification from "@/components/templates/notification/MenuNotification";
+import useUser from "@/hooks/useUser";
 
 type NavbarItem = {
     id: string,
@@ -28,8 +29,9 @@ type NavbarItem = {
 
 const Navbar = () => {
 
-    const { isLoading, user } = useAuth();
     const router = useRouter();
+
+    const { isLoading, user } = useUser();
     const userRole = user?.role_name
 
     const navbarItems: Array<NavbarItem> = [

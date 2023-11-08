@@ -12,12 +12,12 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 
 import { Node } from "@/types/Node";
 import PopupMap from "@/components/templates/map/PopupMap";
-import useAuth from "@/hooks/useAuth";
+import useUser from "@/hooks/useUser";
 
 
 const Map = () => {
 
-    const { user } = useAuth();
+    const { user } = useUser();
     const userRolePath = user?.role_name.toLowerCase();
 
     const nodes: Array<Node> = [

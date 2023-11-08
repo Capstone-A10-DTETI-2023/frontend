@@ -7,9 +7,9 @@ export type User = {
     phone_num: string;
     accessToken: string;
     notificationPref: {
-        email: string;
-        whatsapp: string;
-        firebase: string;
+        email: boolean;
+        whatsapp: boolean;
+        firebase: boolean;
     }
 }
 
