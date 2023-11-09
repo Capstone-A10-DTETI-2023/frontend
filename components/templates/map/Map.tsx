@@ -16,42 +16,12 @@ import useUser from "@/hooks/useUser";
 import { LatLngExpression } from "leaflet";
 
 
-const Map = ({ center }: { center?: Array<number> }) => {
+const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) => {
 
     const { user } = useUser();
     const userRolePath = user?.role_name.toLowerCase();
 
-    const nodes: Array<Node> = [
-        {
-            id: '1',
-            coordinate: [-7.766373977737371, 110.37312759986223],
-            name: 'Node1 - DTNTF',
-            calc_leakage: true,
-            leakage_sens: 0.8
-        },
-        {
-            id: '2',
-            coordinate: [-7.765760581978385, 110.37137545686188],
-            name: 'Node2 - DTMI',
-            calc_leakage: true,
-            leakage_sens: 0.8
-        },
-        {
-            id: '3',
-            coordinate: [-7.7639640348042045, 110.37159539603437],
-            name: 'Node3 - DTAP',
-            calc_leakage: true,
-            leakage_sens: 0.8
-        },
-        {
-            id: '4',
-            coordinate: [-7.764607173843711, 110.37381626685878],
-            name: 'Node4 - DTSL',
-            calc_leakage: true,
-            leakage_sens: 0.8
-        },
-    ];
-
+    // Create connection between nodes
     const polylineNodes: Array<Node['coordinate']> = nodes?.map((node, i) => {
         return node?.coordinate;
     });

@@ -58,14 +58,21 @@ const Navbar = () => {
         },
         {
             id: 'manageNodes',
-            url: '/admin/nodes',
+            url: '/superadmin/nodes',
             label: 'Nodes',
             roles: ['SUPERADMIN'],
             authOnly: true
         },
         {
+            id: 'manageSensor',
+            url: '/superadmin/sensors',
+            label: 'Sensors',
+            roles: ['SUPERADMIN'],
+            authOnly: true
+        },
+        {
             id: 'manageUser',
-            url: '/admin/manage-user',
+            url: '/superadmin/manage-user',
             label: 'Manage User',
             roles: ['SUPERADMIN'],
             authOnly: true

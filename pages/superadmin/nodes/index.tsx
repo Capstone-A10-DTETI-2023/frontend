@@ -64,8 +64,8 @@ const AdminNodes = () => {
                             <>
                                 <div className="flex-col flex gap-2">
                                     <div id="lat-lng">
-                                        <p>Latitude: {node.coordinate[0]}</p>
-                                        <p>Latitude: {node.coordinate[1]}</p>
+                                        <p>Latitude: {Number(node.coordinate[0]).toFixed(3)}</p>
+                                        <p>Latitude: {Number(node.coordinate[1]).toFixed(3)}</p>
                                     </div>
                                     <Button>
                                         <Link href={`/map?lat=${node.coordinate[0]}&lng=${node.coordinate[1]}`}>

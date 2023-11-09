@@ -22,7 +22,7 @@ import { LatLngExpression } from 'leaflet';
 import useCreate from '@/hooks/crud/useCreate';
 
 const MapInputModal = dynamic(
-    () => { return import('@/components/templates/admin/nodes/MapInputModal') },
+    () => { return import('@/components/templates/superadmin/nodes/MapInputModal') },
     {
         loading: () => <LoadingPage>Load the map..</LoadingPage>,
         ssr: false
@@ -52,7 +52,7 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         })
     }
 
-    const { isLoading, error, create } = useCreate<NodePayload>('/api/v2/nodes', { useLocalStorage: true });
+    const { data: { message }, isLoading, error, create } = useCreate<NodePayload>('/api/v2/nodes', { useLocalStorage: true });
     const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -60,6 +60,7 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         await create(payload);
     }
 
+    // Toast
     useEffect(() => {
         if (error) {
             toast({
@@ -70,7 +71,19 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
                 isClosable: true,
             })
         }
-    }, [error])
+    }, [error]);
+
+    useEffect(() => {
+        if (message === 'success') {
+            toast({
+                title: 'Success!',
+                description: 'New node added!',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [message])
 
 
     return (

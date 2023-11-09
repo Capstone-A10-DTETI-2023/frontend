@@ -1,31 +1,45 @@
 import dynamic from "next/dynamic";
-import LoadingPage from "@/components/templates/LoadingPage";
 import { useRouter } from "next/router";
-import { useState } from "react";
+
+import useFetch from "@/hooks/crud/useFetch";
+import { Node } from "@/types/Node";
 const MapComponent = dynamic(
     () => { return import("@/components/templates/map/Map") },
     {
         loading: () => <LoadingPage>Load the map..</LoadingPage>,
         ssr: false
     }
-)
+);
+import Alert from "@/components/templates/Alert";
+import LoadingPage from "@/components/templates/LoadingPage";
 
 
 const Map = () => {
 
     const router = useRouter();
 
-    // setCenter([parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)])
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
 
     return (
         <>
             <section className="container">
                 <section id="map-wrapper">
-                    {router.query.lat && router.query.lng ?
-                        <MapComponent center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
-                        :
-                        <MapComponent /> // access to navbar
+                    {!!error &&
+                        <Alert.Error>{error.message}</Alert.Error>
                     }
+                    {!isNodesLoading && !nodes.data &&
+                        <>You have no nodes</>
+                    }
+                    {isNodesLoading &&
+                        <LoadingPage>Load nodes and map..</LoadingPage>
+                    }
+                    {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && router.query.lat && router.query.lng &&
+                        <MapComponent nodes={nodes.data} center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
+                    }
+                    {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) &&
+                        <MapComponent nodes={nodes.data} /> // access to navbar
+                    }
+
                 </section>
             </section>
         </>

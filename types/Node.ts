@@ -4,6 +4,7 @@ export type Node = {
     name: string;
     calc_leakage: boolean;
     leakage_sens: number;
+    non_leak_sens: number
 }
 
 export type NodePayload = {
