@@ -8,21 +8,38 @@ import {
     TableContainer,
     Badge,
     Button
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import { MdAdd } from 'react-icons/md';
+import { useState } from 'react';
 
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Search from '@/components/templates/Search';
+import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import { Sensor } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
 
 const AdminSensors = () => {
 
     const { data: sensors, error, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     return (
         <>
+            <div id="fab-add-node" className='fixed right-24 bottom-20 z-10'>
+                <Button
+                    size={'lg'}
+                    variant='solid'
+                    colorScheme='blue'
+                    aria-label='Add'
+                    fontSize={'20px'}
+                    leftIcon={<MdAdd />}
+                    className='shadow-xl rounded-full'
+                    onClick={() => setIsModalOpen(true)}
+                >Add Node</Button>
+            </div>
+            <AddNodeModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false) }} />
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>
@@ -64,7 +81,7 @@ const AdminSensors = () => {
                                         <Td>{sensor?.alarm_type}</Td>
                                         <Td>{sensor?.alarm_low}</Td>
                                         <Td>{sensor?.alarm_high}</Td>
-                                        <Td><Button variant={'solid'} colorScheme='blue' className='w-full'>Add</Button></Td>
+                                        <Td><Button variant={'solid'} colorScheme='teal' className='w-full'>Edit</Button></Td>
                                         <Td><Button variant={'outline'} colorScheme='red' className='w-fit'>Delete</Button></Td>
                                     </Tr>
                                 )}

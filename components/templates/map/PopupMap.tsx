@@ -30,7 +30,7 @@ const Title = ({ children }: { children: string }) => {
     )
 }
 
-const Alert = () => {
+const Alert = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     return (
         <>
             <ChakraUIAlert status='error'>
@@ -38,7 +38,7 @@ const Alert = () => {
                 <div id="alert-box">
                     <AlertTitle>Leakage Detected!</AlertTitle>
                     <AlertDescription>
-                        A leakage detected in Node_4, Press See Details to get more detail about this accident.
+                        {children}
                     </AlertDescription>
                 </div>
             </ChakraUIAlert>

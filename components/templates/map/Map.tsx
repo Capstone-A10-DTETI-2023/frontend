@@ -28,7 +28,7 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
     polylineNodes?.push(nodes[0]?.coordinate);
 
     return (
-        <>
+        <>{center &&
             <MapContainer
                 style={{
                     top: 0,
@@ -51,7 +51,11 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
                         <Popup className="rounded-sm">
                             <PopupMap.Container>
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>
-                                <PopupMap.Alert />
+                                <PopupMap.Alert>
+                                    <>
+                                        A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
+                                    </>
+                                </PopupMap.Alert>
                                 <PopupMap.Information />
                                 <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
                             </PopupMap.Container>
@@ -59,6 +63,7 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
                     </Marker>
                 )}
             </MapContainer>
+        }
         </>
     );
 }

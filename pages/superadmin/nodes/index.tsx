@@ -15,8 +15,6 @@ import Breadcrumb from '@/components/templates/Breadcrumb';
 import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import Search from '@/components/templates/Search';
 
-
-
 const AdminNodes = () => {
 
     const toast = useToast();
