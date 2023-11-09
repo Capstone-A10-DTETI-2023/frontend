@@ -4,6 +4,7 @@ import {
     Button
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
+import Link from 'next/link';
 
 import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
@@ -12,7 +13,8 @@ import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Breadcrumb from '@/components/templates/Breadcrumb';
 import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
-import Link from 'next/link';
+import Search from '@/components/templates/Search';
+
 
 
 const AdminNodes = () => {
@@ -53,6 +55,7 @@ const AdminNodes = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Pipe Node Unit (PNU)</h3>
+            <Search />
             <div id="nodes" className="flex flex-col gap-4">
                 {!!error && <Alert.Error>{error.message}</Alert.Error>}
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}

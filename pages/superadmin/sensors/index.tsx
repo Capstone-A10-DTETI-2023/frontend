@@ -13,6 +13,7 @@ import {
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
+import Search from '@/components/templates/Search';
 import { Sensor } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
 
@@ -26,6 +27,7 @@ const AdminSensors = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Sensors</h3>
+            <Search />
             {!!error && <Alert.Error>{error.message}</Alert.Error>}
             {!isSensorLoading && !sensors.data && <>You have no sensors</>}
             {isSensorLoading && <LoadingPage>Load sensors..</LoadingPage>}

@@ -7,6 +7,7 @@ import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Breadcrumb from '@/components/templates/Breadcrumb';
+import Search from '@/components/templates/Search';
 
 
 const TechnicianNodes = () => {
@@ -33,6 +34,7 @@ const TechnicianNodes = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Pipe Node Unit (PNU)</h3>
+            <Search />
             <div id="nodes" className="flex flex-col gap-4">
                 {!!error && <Alert.Error>{error.message}</Alert.Error>}
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}

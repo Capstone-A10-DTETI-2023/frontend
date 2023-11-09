@@ -97,17 +97,6 @@ const Navbar = () => {
 
                             {user ?
                                 <>
-                                    <InputGroup>
-                                        <Input placeholder='Search your node here..' />
-                                        <InputRightElement>
-                                            <Icon as={MdSearch} />
-                                        </InputRightElement>
-                                    </InputGroup>
-
-                                    <div id="button-wrapper" className="w-fit py-4">
-                                        <Button colorScheme='blue'>Search</Button>
-                                    </div>
-
                                     <div className="notification py-4">
                                         <MenuNotification>
                                             <div className="relative cursor-pointer">
