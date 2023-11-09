@@ -25,6 +25,7 @@ const useUser = () => {
         }
     }
 
+    // Always run when useUser initialized, to get current logged in user from storage;
     const getCurrentUser = () => {
         useEffect(() => {
             setUser(JSON.parse(sessionStorage.getItem('user')!))

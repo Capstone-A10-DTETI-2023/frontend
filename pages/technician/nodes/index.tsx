@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 
-import { useFetch } from '@/hooks/useFetch';
+import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
 import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';

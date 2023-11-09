@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AxiosError } from "axios";
 
 import { User, SignInPayload, SignUpPayload, ResetPasswordPayload } from "@/types/User"
@@ -9,7 +9,7 @@ import useUser from "@/hooks/useUser";
 
 
 const useAuth = () => {
-    const { user, setUser, getMe } = useUser();
+    const { setUser, getMe } = useUser();
     const [error, setError] = useState<FetchResponse<User | Notification>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { getNotifPref } = useNotification();
@@ -34,6 +34,11 @@ const useAuth = () => {
 
             await setUser(newUser);
             await sessionStorage.setItem('user', JSON.stringify(newUser));
+
+            if (newUser) {
+                const redirectTo = '/dashboard';
+                return redirectTo;
+            }
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.message });

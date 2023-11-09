@@ -1,16 +1,13 @@
 import {
     FormControl,
     FormLabel,
+    FormHelperText,
     Input,
-    InputGroup,
-    InputRightElement,
     Stack,
     Button,
-    IconButton,
     Text,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -46,7 +43,7 @@ const ResetPassword = () => {
                         <FormControl id="username" isRequired>
                             <FormLabel>Username</FormLabel>
                             <Input
-                                type="tel"
+                                type="text"
                                 placeholder='John Doe'
                                 onChange={(e) => { setPayload({ ...payload, username: e.target.value }) }}
                             />
@@ -59,7 +56,7 @@ const ResetPassword = () => {
                                 onChange={(e) => { setPayload({ ...payload, phone_num: e.target.value }) }}
                             />
                         </FormControl>
-                        <p className='text-sm text-gray-500 my-2' >*Your new password is automatically generated and sent via WhatsApp</p>
+                        <FormHelperText>*Your new password is automatically generated and sent via WhatsApp</FormHelperText>
                         <Stack spacing={10} pt={2}>
                             {!!error && <Alert.Error>{error.message}</Alert.Error>}
                             <Button

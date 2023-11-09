@@ -1,6 +1,7 @@
 import {
     FormControl,
     FormLabel,
+    FormHelperText,
     Input,
     InputGroup,
     InputLeftElement,
@@ -69,7 +70,7 @@ const SignUp = () => {
                                     onChange={(e) => { setPayload({ ...payload, phone_num: e.target.value }) }}
                                 />
                             </InputGroup>
-                            <p className='text-sm text-gray-500 my-2' >*Your password is automatically generated and sent via WhatsApp</p>
+                            <FormHelperText>*Your password is automatically generated and sent via WhatsApp</FormHelperText>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
                             {!!error && <Alert.Error>{error.message}</Alert.Error>}

@@ -75,7 +75,7 @@ const Navbar = () => {
     return (
         <>
             {!isLoading &&
-                <div className="transition-all w-full fixed z-[100] top-0 left-0 right-0 bg-white shadow-md">
+                <div className="transition-all w-full fixed z-[45] top-0 left-0 right-0 bg-white shadow-md">
                     <ul className="w-full container mx-auto flex flex-row font-semibold text-sm justify-between items-center">
                         <li className="text-lg font-extrabold py-4" >
                             <Link href={'/'}>A10</Link>

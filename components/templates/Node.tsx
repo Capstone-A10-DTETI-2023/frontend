@@ -32,7 +32,7 @@ const Title = ({ children }: { children: string }) => {
 
     return (
         <>
-            <div id="node-title" className='basis-1/6 flex justify-center space-x-2 w-full'>
+            <div id="node-title" className='basis-1/6 flex justify-start space-x-2 w-full'>
                 <div id="icon-wrapper">
                     {variant === 'normal' ?
                         <Icon fontSize={24} as={MdLocationPin} color={'teal.400'} />

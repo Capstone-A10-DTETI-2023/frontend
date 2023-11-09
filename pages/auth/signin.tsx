@@ -31,8 +31,12 @@ const SignIn = () => {
         e.preventDefault();
         e.stopPropagation();
 
-        await signIn(payload);
-        await router.push('/dashboard');
+        const redirectTo = await signIn(payload);
+
+        // Get user to redirect
+        if (redirectTo) {
+            router.push(redirectTo);
+        }
     }
 
     return (
