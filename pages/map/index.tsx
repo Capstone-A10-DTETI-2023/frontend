@@ -1,6 +1,7 @@
-import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import LoadingPage from "@/components/templates/LoadingPage";
+import { useRouter } from "next/router";
+import { useState } from "react";
 const MapComponent = dynamic(
     () => { return import("@/components/templates/map/Map") },
     {
@@ -11,11 +12,20 @@ const MapComponent = dynamic(
 
 
 const Map = () => {
+
+    const router = useRouter();
+
+    // setCenter([parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)])
+
     return (
         <>
             <section className="container">
                 <section id="map-wrapper">
-                    <MapComponent />
+                    {router.query.lat && router.query.lng ?
+                        <MapComponent center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
+                        :
+                        <MapComponent /> // access to navbar
+                    }
                 </section>
             </section>
         </>

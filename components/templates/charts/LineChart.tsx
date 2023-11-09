@@ -1,8 +1,11 @@
 import React from "react";
 import EChartsReact from "echarts-for-react";
 
-const LineChart = ({ height }: { height: number }) => {
+const LineChart = ({ height, title = '' }: { height: number, title?: string }) => {
     const options = {
+        title: {
+            text: title,
+        },
         grid: { top: 8, right: 8, bottom: 24, left: 36 },
         xAxis: {
             type: 'category',

@@ -3,3 +3,5 @@ export type Notification = {
     whatsapp: boolean;
     firebase: boolean;
 }
+
+export type NotificationPayload = Notification

@@ -12,6 +12,7 @@ import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Breadcrumb from '@/components/templates/Breadcrumb';
 import AddNodeModal from '@/components/templates/admin/nodes/AddNodeModal';
+import Link from 'next/link';
 
 
 const AdminNodes = () => {
@@ -59,7 +60,21 @@ const AdminNodes = () => {
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
                     <Node.Container key={i} variant='normal'>
                         <Node.Title>{node.name}</Node.Title>
-                        <Node.Information>Information</Node.Information>
+                        <Node.Body>
+                            <>
+                                <div className="flex-col flex gap-2">
+                                    <div id="lat-lng">
+                                        <p>Latitude: {node.coordinate[0]}</p>
+                                        <p>Latitude: {node.coordinate[1]}</p>
+                                    </div>
+                                    <Button>
+                                        <Link href={`/map?lat=${node.coordinate[0]}&lng=${node.coordinate[1]}`}>
+                                            See on Map
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </>
+                        </Node.Body>
                         <Node.Button href={`/admin/nodes/${node.id}`} />
                     </Node.Container>
                 )}

@@ -13,9 +13,10 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import { Node } from "@/types/Node";
 import PopupMap from "@/components/templates/map/PopupMap";
 import useUser from "@/hooks/useUser";
+import { LatLngExpression } from "leaflet";
 
 
-const Map = () => {
+const Map = ({ center }: { center?: Array<number> }) => {
 
     const { user } = useUser();
     const userRolePath = user?.role_name.toLowerCase();
@@ -66,7 +67,7 @@ const Map = () => {
                     bottom: 0,
                     position: 'fixed'
                 }}
-                center={nodes[0]?.coordinate}
+                center={center as LatLngExpression || nodes[0]?.coordinate as LatLngExpression}
                 zoom={16}
                 scrollWheelZoom={true}>
                 <TileLayer
@@ -74,9 +75,9 @@ const Map = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position="bottomright" />
-                <Polyline pathOptions={{ color: 'blue' }} positions={polylineNodes} />
+                <Polyline pathOptions={{ color: 'blue' }} positions={polylineNodes as LatLngExpression[]} />
                 {nodes && nodes?.map((node) =>
-                    <Marker key={node?.id} position={node?.coordinate}>
+                    <Marker key={node?.id} position={node?.coordinate as LatLngExpression}>
                         <Popup className="rounded-sm">
                             <PopupMap.Container>
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>

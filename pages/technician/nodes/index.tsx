@@ -40,11 +40,11 @@ const TechnicianNodes = () => {
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
                     <Node.Container key={i} variant='normal'>
                         <Node.Title>{node.name}</Node.Title>
-                        <Node.Information>Information</Node.Information>
+                        <Node.Body><></></Node.Body>
                         <Node.Button href={`/technician/nodes/${node.id}`} />
                     </Node.Container>
                 )}
-            </div>
+            </div >
         </>
     );
 }
