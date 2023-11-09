@@ -13,7 +13,13 @@ import {
     Button,
     Checkbox,
     InputGroup,
-    useToast
+    useToast,
+    Slider,
+    SliderTrack,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderMark,
+    Tooltip
 } from '@chakra-ui/react'
 import dynamic from 'next/dynamic';
 import LoadingPage from '@/components/templates/LoadingPage';
@@ -38,10 +44,12 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         name: '',
         Latitude: '0',
         Longitude: '0',
-        LeakageSens: 0,
+        LeakageSens: 0.5,
+        NonLeakageSens: 0.5,
         CalcLeakage: true
     });
-    const toast = useToast();
+    const [sliderValue, setSliderValue] = useState<number>(0.8)
+    const [showTooltip, setShowTooltip] = useState<boolean>(false)
 
     const coordinate: LatLngExpression = [parseFloat(payload.Latitude), parseFloat(payload.Longitude)];
     const setCoordinate = (lat: number, lng: number) => {
@@ -61,6 +69,7 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
     }
 
     // Toast
+    const toast = useToast();
     useEffect(() => {
         if (error) {
             toast({
@@ -137,13 +146,77 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
                                 <Button colorScheme='teal' onClick={() => { setIsMapOpen(true) }}>Open Map</Button>
                                 <FormControl id="leakageSens" isRequired>
                                     <FormLabel>Leakage Sensitivity</FormLabel>
-                                    <Input
-                                        type="number"
-                                        placeholder='0,8'
-                                        step={'0.001'}
-                                        onChange={(e) => setPayload({ ...payload, LeakageSens: parseFloat(e.target.value) })}
-                                        value={payload.LeakageSens.toString()}
-                                    />
+                                    <Slider
+                                        size={'lg'}
+                                        aria-label='Slider Leakage'
+                                        defaultValue={payload.LeakageSens}
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        onChange={(val) => setPayload({ ...payload, LeakageSens: val })}
+                                        onMouseEnter={() => setShowTooltip(true)}
+                                        onMouseLeave={() => setShowTooltip(false)}
+                                    >
+                                        <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
+                                            0
+                                        </SliderMark>
+                                        <SliderMark value={0.5} mt='1' ml='-2.5' fontSize='sm'>
+                                            0,5
+                                        </SliderMark>
+                                        <SliderMark value={1} mt='1' ml='-2.5' fontSize='sm'>
+                                            1
+                                        </SliderMark>
+                                        <SliderTrack>
+                                            <SliderFilledTrack />
+                                        </SliderTrack>
+                                        <Tooltip
+                                            hasArrow
+                                            bg='teal.500'
+                                            color='white'
+                                            placement='top'
+                                            isOpen={showTooltip}
+                                            label={`${payload.LeakageSens}`}
+                                        >
+                                            <SliderThumb boxSize={6} />
+                                        </Tooltip>
+                                    </Slider>
+                                </FormControl>
+                                <FormControl id="nonLeakageSens" isRequired>
+                                    <FormLabel>Non-Leakage Sensitivity</FormLabel>
+                                    <Slider
+                                        size={'lg'}
+                                        aria-label='Slider Non Leakage'
+                                        defaultValue={payload.NonLeakageSens}
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        onChange={(val) => setPayload({ ...payload, NonLeakageSens: val })}
+                                        onMouseEnter={() => setShowTooltip(true)}
+                                        onMouseLeave={() => setShowTooltip(false)}
+                                    >
+                                        <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
+                                            0
+                                        </SliderMark>
+                                        <SliderMark value={0.5} mt='1' ml='-2.5' fontSize='sm'>
+                                            0,5
+                                        </SliderMark>
+                                        <SliderMark value={1} mt='1' ml='-2.5' fontSize='sm'>
+                                            1
+                                        </SliderMark>
+                                        <SliderTrack>
+                                            <SliderFilledTrack />
+                                        </SliderTrack>
+                                        <Tooltip
+                                            hasArrow
+                                            bg='teal.500'
+                                            color='white'
+                                            placement='top'
+                                            isOpen={showTooltip}
+                                            label={`${payload.NonLeakageSens}`}
+                                        >
+                                            <SliderThumb boxSize={6} />
+                                        </Tooltip>
+                                    </Slider>
                                 </FormControl>
                                 <FormControl id="calculateLeakage">
                                     <Checkbox

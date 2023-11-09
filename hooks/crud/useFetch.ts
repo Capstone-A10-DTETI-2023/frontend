@@ -27,7 +27,7 @@ const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useInde
                 }
             }
             catch (error: AxiosError | any) {
-                setError({ status: error?.response?.status, message: error?.message });
+                setError({ status: error?.response?.status, message: error?.response?.data });
                 console.log(error.message);
             }
             finally {
@@ -44,7 +44,7 @@ const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useInde
         isLoading
     }
 
-    
+
 }
 
 export default useFetch;

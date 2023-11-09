@@ -12,5 +12,6 @@ export type NodePayload = {
     Latitude: string,
     Longitude: string,
     LeakageSens: number,
+    NonLeakageSens: number,
     CalcLeakage: boolean
 }

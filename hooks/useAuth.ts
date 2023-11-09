@@ -41,7 +41,7 @@ const useAuth = () => {
             }
         }
         catch (error: AxiosError | any) {
-            setError({ status: error?.response?.status, message: error?.message });
+            setError({ status: error?.response?.status, message: error?.response?.data });
             console.log(error.message);
         }
         finally {
@@ -71,7 +71,7 @@ const useAuth = () => {
             sessionStorage.removeItem('user');
         }
         catch (error: AxiosError | any) {
-            setError({ status: error?.response?.status, message: error?.message });
+            setError({ status: error?.response?.status, message: error?.response?.data });
             console.log(error.message);
         }
         finally {
@@ -85,7 +85,7 @@ const useAuth = () => {
             await fetcher.post('/api/v2/auth/register', payload);
         }
         catch (error: AxiosError | any) {
-            setError({ status: error?.response?.status, message: error?.message });
+            setError({ status: error?.response?.status, message: error?.response?.data });
             console.log(error.message);
         }
         finally {

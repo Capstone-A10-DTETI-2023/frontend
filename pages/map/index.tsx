@@ -31,7 +31,7 @@ const Map = () => {
                         <>You have no nodes</>
                     }
                     {isNodesLoading &&
-                        <LoadingPage>Load nodes and map..</LoadingPage>
+                        <LoadingPage>Load nodes..</LoadingPage>
                     }
                     {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && router.query.lat && router.query.lng &&
                         <MapComponent nodes={nodes.data} center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect

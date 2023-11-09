@@ -17,7 +17,7 @@ const useUser = () => {
             return response.data.data;
         }
         catch (error: AxiosError | any) {
-            setError({ status: error?.response?.status, message: error?.message });
+            setError({ status: error?.response?.status, message: error?.response?.data });
             console.log(error.message);
         }
         finally {

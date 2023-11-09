@@ -89,7 +89,7 @@ const Navbar = () => {
                         </li>
                         <li className="flex items-center space-x-8">
                             {navbarItems && navbarItems
-                                ?.filter((navbarItem) => ((user && navbarItem.authOnly || !navbarItem.authOnly) || (!user && !navbarItem.authOnly)) && navbarItem.roles.includes(userRole ?? 'USER'))
+                                ?.filter((navbarItem) => (user && navbarItem.authOnly && navbarItem.roles.includes(userRole ?? 'USER')))
                                 ?.map((navbarItem) =>
                                     <Link className={`text-center py-4 h-full min-w-max ${router.pathname.includes(navbarItem.url) && 'font-bold text-sky-600 underline underline-offset-8'}`} key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.label}</Link>
                                 )}

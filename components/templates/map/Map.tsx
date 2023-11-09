@@ -53,7 +53,7 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
                                 <PopupMap.Title>{node?.name}</PopupMap.Title>
                                 <PopupMap.Alert />
                                 <PopupMap.Information />
-                                <PopupMap.Button href={`/${userRolePath}/nodes/${node?.id}`} />
+                                <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
                             </PopupMap.Container>
                         </Popup>
                     </Marker>

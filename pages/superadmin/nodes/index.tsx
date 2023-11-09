@@ -75,7 +75,7 @@ const AdminNodes = () => {
                                 </div>
                             </>
                         </Node.Body>
-                        <Node.Button href={`/admin/nodes/${node.id}`} />
+                        <Node.Button href={`/superadmin/nodes/${node.id}`} />
                     </Node.Container>
                 )}
             </div>
