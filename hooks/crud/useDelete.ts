@@ -3,27 +3,29 @@ import { FetchResponse } from "@/types/Api"
 import { AxiosError } from "axios";
 import fetcher from '@/services/fetcher';
 
-const useCreate = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean }) => {
+interface WithId {
+    id: number
+}
+
+const useUpdate = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean }) => {
     const [data, setData] = useState<FetchResponse<T>['data']>({ message: '', data: null });
     const [error, setError] = useState<FetchResponse<T>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // Init local storage instance when component is ready;
-    // Dont forget tu null-ing instance to put in the garbage collector
-
-    const create = async <P>(payload: P) => {
+    const update = async <P extends WithId>(payload: P, id: number) => {
         setIsLoading(true);
         try {
-            const response = await fetcher.post(url, payload);
+            const response = await fetcher.delete(`${url}/${id}`);
             setData({ message: response.data.message, data: response.data.data });
 
             // Mutate data to local
             if (response) {
                 let storageInstance: Storage | null = localStorage;
 
-                const data: Array<P> = JSON.parse(storageInstance?.getItem(url)!);
-                const newData: Array<P> = [...data, response.data.data];
-                storageInstance?.setItem(url, JSON.stringify(newData));
+                const data: Array<P> = JSON.parse(storageInstance.getItem(url)!);
+                const editedData: Array<P> = data.filter((item) => { return response.data.data.id !== item.id })
+
+                storageInstance?.setItem(url, JSON.stringify(editedData));
 
                 storageInstance = null
             }
@@ -41,9 +43,9 @@ const useCreate = <T>(url: string, options?: { useLocalStorage?: boolean, useInd
         data,
         error,
         isLoading,
-        create
+        update
     }
 
 }
 
-export default useCreate;
+export default useUpdate;
