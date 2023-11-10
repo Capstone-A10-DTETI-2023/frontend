@@ -65,6 +65,10 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         e.stopPropagation();
 
         await create(payload);
+
+        if (!isLoading) {
+            onClose();
+        }
     }
 
     // Toast

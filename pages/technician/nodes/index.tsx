@@ -13,7 +13,7 @@ import Search from '@/components/templates/Search';
 const TechnicianNodes = () => {
 
     const toast = useToast();
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true });
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true  });
 
     useEffect(() => {
         if (error) {

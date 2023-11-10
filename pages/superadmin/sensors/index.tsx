@@ -22,7 +22,7 @@ import useFetch from "@/hooks/crud/useFetch";
 
 const AdminSensors = () => {
 
-    const { data: sensors, error, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
+    const { data: sensors, error, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true, earlyFetch: true  });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     return (

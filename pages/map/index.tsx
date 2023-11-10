@@ -18,10 +18,11 @@ const Map = () => {
 
     const router = useRouter();
 
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
 
     return (
         <>
+            {JSON.stringify(nodes.data)}
             <section className="container">
                 <section id="map-wrapper">
                     {!!error &&
@@ -37,7 +38,7 @@ const Map = () => {
                         <MapComponent nodes={nodes.data} center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
                     }
                     {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) &&
-                        <MapComponent nodes={nodes.data} /> // access to navbar
+                        <MapComponent nodes={nodes.data} center={nodes.data[0].coordinate} /> // access to navbar
                     }
 
                 </section>

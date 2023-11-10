@@ -85,8 +85,10 @@ const RootLayout = ({ children, ...customMeta }: LayoutProps) => {
         <title key="title">{meta.title}</title>
       </Head>
       {!pathIsForAuth(router.pathname) && <Navbar />}
-      <main className="py-28 mx-auto w-full container">
-        {children}
+      <main className="py-28 mx-auto container">
+        <section className="mx-auto">
+          {children}
+        </section>
       </main>
     </>
   );

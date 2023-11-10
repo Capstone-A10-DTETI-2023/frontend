@@ -1,5 +1,3 @@
-import { Node } from "@/types/Node";
-
 const getData = <T>(key: string): T[] => {
     const data = JSON.parse(localStorage.getItem(key)!) as Array<T>;
     return data;

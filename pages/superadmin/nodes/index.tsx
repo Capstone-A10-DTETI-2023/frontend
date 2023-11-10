@@ -18,7 +18,7 @@ import Search from '@/components/templates/Search';
 const AdminNodes = () => {
 
     const toast = useToast();
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true });
+    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {

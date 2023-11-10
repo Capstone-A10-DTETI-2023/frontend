@@ -23,6 +23,7 @@ const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | J
                     style={{ paddingTop: 0 }} // anxiety comes when you comment this
                     onChange={(e) => onChange(e)}
                     value={value}
+                    placeholder='Select Sensor'
                 >
                     {children}
                 </Select>
