@@ -21,9 +21,17 @@ import {
 import { SensorPayload } from '@/types/Sensor';
 import useCreate from '@/hooks/crud/useCreate';
 import { Node } from '@/types/Node';
+import getData from '@/services/localStorage/getData';
 
 const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
 
+    // Dropdown from localStorage
+    const [nodesDropdown, setNodesDropdown] = useState<Array<Node>>([]);
+    useEffect(() => {
+        setNodesDropdown(getData<Node>('/api/vw/nodes'));
+    }, [])
+
+    // Payload and Create
     const [payload, setPayload] = useState<SensorPayload>({
         Name: "",
         SensorType: 1,
@@ -36,14 +44,6 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
         AlarmHigh: 90,
         NodeID: 0
     });
-    const [nodesDropdown, setNodesDropdown] = useState<Array<Node>>([]);
-    useEffect(() => {
-        const nodes = JSON.parse(localStorage.getItem('/api/v2/nodes')!) as Array<Node>;
-        if (nodes) {
-            setNodesDropdown(nodes);
-        }
-    }, [])
-
     const { data: { message }, isLoading, error, create } = useCreate<SensorPayload>('/api/v2/sensors', { useLocalStorage: true });
     const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -70,7 +70,6 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
             })
         }
     }, [error]);
-
     useEffect(() => {
         if (message === 'success') {
             toast({

@@ -1,16 +1,15 @@
-import { Node } from "@/types/Node";
-
-const getNodeDetail = (nodeId: string | string[]): Node => {
-    const key = '/api/v2/nodes';
-
-    const nodes = JSON.parse(localStorage.getItem('/api/v2/nodes')!) as Array<Node>;
-    
-    const node = nodes.find((node) => {
-        return node.id.toString() === nodeId;
-    })!;
-
-    return node;
-
+interface WithId {
+    id: number
 }
 
-export default getNodeDetail;
+const getDataById = <T extends WithId>(id: string | string[], key: string): T => {
+    const data = JSON.parse(localStorage.getItem(key)!) as Array<T>;
+
+    const datum = data.find((datum) => {
+        return datum.id.toString() === id;
+    })!;
+
+    return datum;
+}
+
+export default getDataById;

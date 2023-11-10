@@ -5,41 +5,18 @@ import Breadcrumb from "@/components/templates/Breadcrumb";
 import LineChart from '@/components/templates/charts/LineChart';
 import Alert from '@/components/templates/Alert';
 import Bar from '@/components/templates/Bar';
-import getNodeDetail from '@/services/localStorage/getNodeDetail';
+import getDataById from '@/services/localStorage/getNodeDetail';
 import { Node } from '@/types/Node';
 import { Sensor } from '@/types/Sensor';
+import getData from '@/services/localStorage/getData';
+import getSensorByNodeId from '@/services/localStorage/getSensorByNodeId';
 
 const NodeDetails = () => {
     const [node, setNode] = useState<Node | null>(null);
     const router = useRouter();
+    const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
 
     const nodeId = router.query.node_id;
-    const sensors: Array<Sensor> = [
-        {
-            id: 1,
-            node_id: 1,
-            name: "Pressure",
-            unit: "psi",
-            interval: 30,
-            tolerance: 5,
-            alarm: true,
-            alarm_type: 1,
-            alarm_low: 30,
-            alarm_high: 90
-        },
-        {
-            id: 2,
-            node_id: 1,
-            name: "Temperature",
-            unit: "psi",
-            interval: 30,
-            tolerance: 5,
-            alarm: true,
-            alarm_type: 1,
-            alarm_low: 30,
-            alarm_high: 90
-        },
-    ];
     const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
         {
             id: 'last-value',
@@ -68,16 +45,17 @@ const NodeDetails = () => {
     ]
     const isLeakage: boolean = true; // Fetch from backend
 
-    const [selectedSensor, setSelectedSensor] = useState<string>(sensors[0].name);
+    const [selectedSensor, setSelectedSensor] = useState<string>('');
     const [selectedLimit, setSelectedLimit] = useState<number>();
     const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
         setState(e.target.value);
     }
 
 
-
     useEffect(() => {
-        setNode(getNodeDetail(nodeId!));
+        setNode(getDataById<Node>(nodeId!, '/api/v2/nodes'));
+        setSensorDropdown(getSensorByNodeId(nodeId!));
+        setSelectedSensor(sensorDropdown[0]?.name)
     }, [nodeId]);
 
     return (
@@ -98,8 +76,8 @@ const NodeDetails = () => {
                     <div id="control-bar" className='mb-8'>
                         <div id="top-content-wrapper" className="flex flex-row justify-between w-full mb-4">
                             <Bar.SelectSensor onChange={(e) => handleSelect(e, setSelectedSensor)} value={selectedSensor!}>
-                                {sensors && sensors.map((sensor) =>
-                                    <option className='text-black' key={sensor.id} value={sensor?.name}>{sensor.name}</option>
+                                {sensorDropdown && sensorDropdown.map((sensor) =>
+                                    <option className='text-black' key={sensor?.id} value={sensor?.name}>{sensor.name}</option>
                                 )}
                             </Bar.SelectSensor>
                             <div id="top-right-content-wrapper">

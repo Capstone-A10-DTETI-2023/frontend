@@ -1,5 +1,5 @@
 export type Node = {
-    id: number | string;
+    id: number;
     coordinate: Array<number>;
     name: string;
     calc_leakage: boolean;
