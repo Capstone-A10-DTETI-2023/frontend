@@ -48,7 +48,6 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         NonLeakageSens: 0.5,
         CalcLeakage: true
     });
-    const [sliderValue, setSliderValue] = useState<number>(0.8)
     const [showTooltip, setShowTooltip] = useState<boolean>(false)
 
     const coordinate: LatLngExpression = [parseFloat(payload.Latitude), parseFloat(payload.Longitude)];

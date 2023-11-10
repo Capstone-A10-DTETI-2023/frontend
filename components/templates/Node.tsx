@@ -15,7 +15,7 @@ const Container = ({ children, variant }: { children: JSX.Element | Array<JSX.El
     return (
         <>
             <VariantContext.Provider value={variant}>
-                <div id='node-container' className={`hover:shadow-lg hover:outline-4 hover:outline-teal-500 transition-all p-4 w-full shadow-md outline outline-1 bg-white rounded-lg text-black ${variant === 'normal' ? `outline-gray-200 ` : `outline-red-200 bg-red-100`}`
+                <div id='node-container' className={`hover:shadow-lg hover:outline-4  transition-all p-4 w-full shadow-md outline outline-1 bg-white rounded-lg text-black ${variant === 'normal' ? `outline-gray-200 hover:outline-teal-500` : `outline-red-400 bg-red-100 outline-2`}`
                 }>
                     <div className='flex flex-row justify-between items-center space-x-4 w-full h-full'>
                         {children}
@@ -68,11 +68,14 @@ const Body = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 }
 
 const Button = ({ href }: { href: string }) => {
+
+    const variant = useContext(VariantContext)
+
     return (
         <>
             <div id="button-wrapper" className='basis-1/6 flex justify-center'>
                 <Link href={href}>
-                    <IconButton className='shadow-md' aria-label='Node details' colorScheme='teal' size={'lg'} fontSize={24} icon={<MdArrowCircleRight />} />
+                    <IconButton className='shadow-md' aria-label='Node details' colorScheme={variant === 'normal' ? 'teal' : 'red'} size={'lg'} fontSize={24} icon={<MdArrowCircleRight />} />
                 </Link>
             </div>
         </>

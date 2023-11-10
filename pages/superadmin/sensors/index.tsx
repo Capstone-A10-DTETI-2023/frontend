@@ -16,7 +16,7 @@ import Breadcrumb from "@/components/templates/Breadcrumb";
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Search from '@/components/templates/Search';
-import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
+import AddSensorModal from '@/components/templates/sensors/AddSensorModal';
 import { Sensor } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
 
@@ -39,7 +39,7 @@ const AdminSensors = () => {
                     onClick={() => setIsModalOpen(true)}
                 >Add Node</Button>
             </div>
-            <AddNodeModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false) }} />
+            <AddSensorModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false) }} />
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>

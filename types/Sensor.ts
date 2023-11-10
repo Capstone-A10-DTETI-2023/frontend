@@ -12,5 +12,18 @@ export type Sensor = {
 }
 
 export type SensorData = {
-    
+
+}
+
+export type SensorPayload = {
+    Name: string,
+    SensorType: number,
+    Unit: string,
+    Interval: number,
+    Tolerance: number,
+    Alarm: boolean,
+    AlarmType: number,
+    AlarmLow: number,
+    AlarmHigh: number,
+    NodeID: number
 }

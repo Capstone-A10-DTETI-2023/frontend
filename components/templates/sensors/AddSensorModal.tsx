@@ -1,0 +1,196 @@
+import { useState, useEffect } from 'react';
+import {
+    FormControl,
+    FormLabel,
+    Input,
+    Modal,
+    ModalHeader,
+    ModalOverlay,
+    ModalContent,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Checkbox,
+    InputRightAddon,
+    InputGroup,
+    useToast,
+    Select
+} from '@chakra-ui/react'
+
+import { SensorPayload } from '@/types/Sensor';
+import useCreate from '@/hooks/crud/useCreate';
+import { Node } from '@/types/Node';
+
+const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+
+    const [payload, setPayload] = useState<SensorPayload>({
+        Name: "",
+        SensorType: 1,
+        Unit: "",
+        Interval: 0,
+        Tolerance: 0,
+        Alarm: false,
+        AlarmType: 1,
+        AlarmLow: 30,
+        AlarmHigh: 90,
+        NodeID: 0
+    });
+    const [nodesDropdown, setNodesDropdown] = useState<Array<Node>>([]);
+    useEffect(() => {
+        const nodes = JSON.parse(localStorage.getItem('/api/v2/nodes')!) as Array<Node>;
+        if (nodes) {
+            setNodesDropdown(nodes);
+        }
+    }, [])
+
+    const { data: { message }, isLoading, error, create } = useCreate<SensorPayload>('/api/v2/sensors', { useLocalStorage: true });
+    const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        await create(payload);
+
+        if (!isLoading) {
+            onClose();
+        }
+
+    }
+
+    // Toast
+    const toast = useToast();
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: 'Error!',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [error]);
+
+    useEffect(() => {
+        if (message === 'success') {
+            toast({
+                title: 'Success!',
+                description: 'New node added!',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [message])
+
+
+    return (
+        <>
+            <Modal isCentered isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay className='fixed top-0 bottom-0 left-0 right-0' />
+                <ModalContent>
+                    <ModalHeader>Add New Sensor</ModalHeader>
+                    <ModalCloseButton />
+                    <form action="submit" onSubmit={(e) => {
+                        e.preventDefault();
+                        handleAdd(e);
+                    }}>
+                        <ModalBody pb={6}>
+                            <div id="add-node-wrapper" className='flex flex-col gap-4'>
+                                <FormControl id="name" isRequired>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input
+                                        type="text"
+                                        placeholder='Pressure'
+                                        onChange={(e) => setPayload({ ...payload, Name: e.target.value })}
+                                        value={payload.Name}
+                                    />
+                                </FormControl>
+                                <FormControl id="sensorType" isRequired>
+                                    <FormLabel>Sensor Type</FormLabel>
+                                    <Input
+                                        type="number"
+                                        placeholder='1'
+                                        onChange={(e) => setPayload({ ...payload, SensorType: parseInt(e.target.value) })}
+                                        value={payload.SensorType}
+                                    />
+                                </FormControl>
+                                <FormControl id="unit" isRequired>
+                                    <FormLabel>Unit</FormLabel>
+                                    <Input
+                                        type="text"
+                                        placeholder='psi'
+                                        onChange={(e) => setPayload({ ...payload, Unit: e.target.value })}
+                                        value={payload.Unit}
+                                    />
+                                </FormControl>
+                                <FormControl id="interval" isRequired>
+                                    <FormLabel>Interval</FormLabel>
+                                    <InputGroup>
+                                        <Input
+                                            type="number"
+                                            step={1}
+                                            placeholder='30'
+                                            onChange={(e) => setPayload({ ...payload, Interval: parseInt(e.target.value) })}
+                                            value={payload.Interval}
+                                        />
+                                        <InputRightAddon children='seconds' />
+                                    </InputGroup>
+                                </FormControl>
+                                <FormControl id="tolerance" isRequired>
+                                    <FormLabel>Tolerance</FormLabel>
+                                    <Input
+                                        type="number"
+                                        step={1}
+                                        placeholder='5'
+                                        onChange={(e) => setPayload({ ...payload, Tolerance: parseInt(e.target.value) })}
+                                        value={payload.Tolerance}
+                                    />
+                                </FormControl>
+                                <FormControl id="alarm">
+                                    <Checkbox
+                                        isChecked={payload.Alarm}
+                                        size={'md'}
+                                        onChange={(e) => setPayload({ ...payload, Alarm: !payload.Alarm })}
+                                    >
+                                        Use Alarm?
+                                    </Checkbox>
+                                </FormControl>
+                                <FormControl id="tolerance" isRequired>
+                                    <FormLabel>Tolerance</FormLabel>
+                                    <Select
+                                        placeholder='Choose correspending node'
+                                        onChange={(e) => setPayload({ ...payload, NodeID: parseInt(e.target.value) })}
+                                    >
+                                        {nodesDropdown && nodesDropdown.map((node) =>
+                                            <option value={node.id}>{node.name}</option>
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </div>
+
+                        </ModalBody>
+
+                        <ModalFooter>
+                            <Button
+                                colorScheme='blue'
+                                mr={4}
+                                type='submit'
+                                isLoading={isLoading}
+                                loadingText='Saving..'
+                            >
+                                Save
+                            </Button>
+                            <Button
+                                onClick={onClose}
+                                isLoading={isLoading}
+                            >Cancel</Button>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+
+export default AddSensorModal;

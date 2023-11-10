@@ -59,7 +59,7 @@ const AdminNodes = () => {
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
-                    <Node.Container key={i} variant='normal'>
+                    <Node.Container key={i} variant={node.id !== 1 ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
                         <Node.Body>
                             <>
