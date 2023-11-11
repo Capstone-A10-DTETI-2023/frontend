@@ -37,7 +37,7 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
                     bottom: 0,
                     position: 'fixed'
                 }}
-                center={center as LatLngExpression || nodes[0]?.coordinate as LatLngExpression}
+                center={center as LatLngExpression || nodes[0]?.coordinate as LatLngExpression || [0, 0]}
                 zoom={16}
                 scrollWheelZoom={true}>
                 <TileLayer

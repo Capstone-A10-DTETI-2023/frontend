@@ -1,9 +1,10 @@
 const PROTECTED_ROUTES: Array<string> = [
     '/dashboard',
-    '/admin/manage-user',
-    '/admin/nodes',
+    '/map',
+    '/superadmin/manage-user',
+    '/superadmin/nodes',
+    '/superadmin/sensors',
     '/technician/nodes',
-    '/monitoring',
     '/profile',
     '/notification',
 ]

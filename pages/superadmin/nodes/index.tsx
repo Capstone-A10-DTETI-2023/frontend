@@ -6,32 +6,43 @@ import {
 import { MdAdd } from 'react-icons/md';
 import Link from 'next/link';
 
-import useFetch from '@/hooks/crud/useFetch';
-import { Node as NodeType } from '@/types/Node';
 import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Breadcrumb from '@/components/templates/Breadcrumb';
 import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import Search from '@/components/templates/Search';
+import useFetch from '@/hooks/crud/useFetch';
+import { Node as NodeType } from '@/types/Node';
+import { SensorData } from '@/types/Sensor';
 
 const AdminNodes = () => {
 
     const toast = useToast();
-    const { data: nodes, error, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
+    const { data: nodes, error: nodeError, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
+    const { data: sensorData, error: sensorError, isLoading: isSensorDataLoading } = useFetch<SensorData>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        if (error) {
+        if (nodeError) {
             toast({
                 title: 'Error!',
-                description: error.message,
+                description: nodeError.message,
                 status: 'error',
                 duration: 5000,
                 isClosable: true,
             })
         }
-    }, [error])
+        if (sensorError) {
+            toast({
+                title: 'Error!',
+                description: sensorError.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [nodeError, sensorError])
 
 
     return (
@@ -55,8 +66,9 @@ const AdminNodes = () => {
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Pipe Node Unit (PNU)</h3>
             <Search />
             <div id="nodes" className="flex flex-col gap-4">
-                {!!error && <Alert.Error>{error.message}</Alert.Error>}
-                {!isNodesLoading && !nodes.data && <>You have no nodes</>}
+                {!!nodeError && <Alert.Error>{nodeError.message}</Alert.Error>}
+                {!!sensorError && <Alert.Error>{sensorError.message}</Alert.Error>}
+                {!isNodesLoading && !isSensorDataLoading && !nodes.data && <>You have no nodes</>}
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
                     <Node.Container key={i} variant={node.id !== 1 ? 'normal' : 'warning'}>
