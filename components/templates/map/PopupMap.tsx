@@ -49,8 +49,8 @@ const Alert = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 const Chart = () => {
     return (
         <>
-            <div id="chart-wrapper" className='w-full'>
-                <LineChart height={200} />
+            <div id="chart-wrapper" className='w-full mx-auto'>
+                <LineChart height={200} width='100%' name='Pressure' />
             </div>
         </>
     )
@@ -62,7 +62,6 @@ const Information = () => {
             <div id="popup-map-information" className='w-full flex flex-col space-y-3'>
                 <Chart />
                 <div id="sensor-information" className='flex gap-3 mx-auto'>
-                    <p>pH: {0}</p>
                     <p>turbidity: {0}</p>
                     <p>temp: {0}</p>
                     <p>waterflow: {0}</p>

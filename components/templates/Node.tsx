@@ -60,7 +60,7 @@ const Body = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
                 </div>
                 <div id="chart-wrapper" className='p-4 basis-2/3 rounded-md outline outline-1 bg-white outline-gray-300'>
                     <h6 className='font-semibold mb-2 text-lg' >Pressure Value:</h6>
-                    <LineChart height={100} />
+                    <LineChart height={100} name='Pressure'/>
                 </div>
             </div>
         </>

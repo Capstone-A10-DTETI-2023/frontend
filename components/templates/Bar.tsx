@@ -1,9 +1,11 @@
-import { memo, ChangeEvent } from 'react'
+import { memo, ChangeEvent, useState } from 'react'
 import {
     Select,
     Input,
     Icon,
-    IconButton
+    IconButton,
+    Button,
+    Divider
 } from '@chakra-ui/react'
 
 import { MdArrowRight, MdDownload, MdRefresh } from 'react-icons/md'
@@ -23,7 +25,6 @@ const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | J
                     style={{ paddingTop: 0 }} // anxiety comes when you comment this
                     onChange={(e) => onChange(e)}
                     value={value}
-                    placeholder='Select Sensor'
                 >
                     {children}
                 </Select>
@@ -34,23 +35,38 @@ const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | J
 
 
 const SelectDateRange = () => {
+
+    const [from, setFrom] = useState<string>();
+    const [to, setTo] = useState<string>();
+    const { dateStart, dateInput } = date.getTimestampNow();
+
     return (
         <>
-            <div id="select-date-range-wrapper" className='w-fit flex items-center'>
-                <Input
-                    id='from-date'
-                    placeholder="Select Date and Time"
-                    size="md"
-                    type="datetime-local"
-                />
-                <Icon fontSize={36} as={MdArrowRight} />
-                <Input
-                    id='to-date'
-                    placeholder="Select Date and Time"
-                    size="md"
-                    type="datetime-local"
-                    defaultValue={date.getTimestampNow()}
-                />
+            <div id="select-date-range" className='w-fit flex gap-2 items-center'>
+                <Button
+                    paddingX={12}
+                    onClick={() => setFrom(dateStart)}
+                    _focus={{ outlineColor: 'teal.400' }}>Today</Button>
+                <Divider orientation='vertical' />
+                <div id="select-date-range-wrapper" className='w-fit flex items-center'>
+                    <Input
+                        id='from-date'
+                        placeholder="Select Date and Time"
+                        size="md"
+                        type="datetime-local"
+                        defaultValue={dateStart}
+                        value={from}
+
+                    />
+                    <Icon fontSize={36} as={MdArrowRight} />
+                    <Input
+                        id='to-date'
+                        placeholder="Select Date and Time"
+                        size="md"
+                        type="datetime-local"
+                        defaultValue={dateInput}
+                    />
+                </div>
             </div>
         </>
     )

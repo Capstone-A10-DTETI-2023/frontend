@@ -55,8 +55,8 @@ const ResetPassword = () => {
                                 placeholder='0812345678900'
                                 onChange={(e) => { setPayload({ ...payload, phone_num: e.target.value }) }}
                             />
+                            <FormHelperText>*Your new password is automatically generated and sent via WhatsApp</FormHelperText>
                         </FormControl>
-                        <FormHelperText>*Your new password is automatically generated and sent via WhatsApp</FormHelperText>
                         <Stack spacing={10} pt={2}>
                             {!!error && <Alert.Error>{error.message}</Alert.Error>}
                             <Button

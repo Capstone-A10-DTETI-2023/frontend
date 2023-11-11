@@ -128,7 +128,7 @@ const NodeDetails = () => {
                         </div>
                     </div>
                     <div id="chart">
-                        <LineChart height={200} />
+                        <LineChart height={200} name='Pressure' />
                     </div>
                 </div>
             </div>
