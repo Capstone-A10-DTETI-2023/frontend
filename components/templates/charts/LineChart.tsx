@@ -1,29 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EChartsReact from "echarts-for-react";
+import lodash from 'lodash'
 
 const LineChart = ({ height, width = '100%', name = 'Unnamed' }: { height: number, width?: string, name: string }) => {
-    const options = {
+
+    const maxLength = 10;
+    const msInterval = 1000;
+
+    const defaultOption = {
         title: {
             text: '',
         },
-        grid: { top: 24, right: 8, bottom: 16, left: 36 },
+        grid: { top: 24, right: 8, bottom: 20, left: 36 },
         legend: {
             data: [name],
             right: 'right'
         },
         xAxis: {
             type: 'category',
-            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5],
+            boundaryGap: true,
+            data: ['1', '2', '3', '4', '1', '2', '3', '4', '1']
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            max: 20,
+            min: 0
         },
         series: [
             {
                 name: name,
-                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 329],
                 type: 'line',
                 smooth: true,
+                data: (function () {
+                    let res = [];
+                    let len = 0;
+                    while (len < maxLength) {
+                        res.push((Math.random() * 10 + 5).toFixed(1));
+                        len++;
+                    }
+                    return res;
+                })()
             },
         ],
         tooltip: {
@@ -31,10 +47,34 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed' }: { height: numbe
         },
     };
 
+    const [option, setOption] = useState(defaultOption);
+
+    const generateRandomData = () => {
+        const axisData = (new Date()).toLocaleTimeString().replace(/^\D*/, '');
+        const newOption = lodash.cloneDeep(option); // immutable
+
+        const data = newOption.series[0].data;
+        data.shift();
+        data.push((Math.random() * 10 + 5).toFixed(1));
+
+        newOption.xAxis.data.shift();
+        newOption.xAxis.data.push(axisData);
+
+        setOption(newOption);
+    }
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            generateRandomData();
+        }, msInterval)
+
+        return () => clearInterval(timer)
+    })
+
     return (
         <>
             <EChartsReact
-                option={options}
+                option={option}
                 style={{ maxHeight: height, width: width }}
             />
         </>

@@ -36,16 +36,18 @@ const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | J
 
 const SelectDateRange = () => {
 
-    const [from, setFrom] = useState<string>();
-    const [to, setTo] = useState<string>();
-    const { dateStart, dateInput } = date.getTimestampNow();
+    const { dateQueryNow, dateQueryLastWeek } = date.getTimestampNow();
+    const [from, setFrom] = useState<string>(date.formatQueryToInput(dateQueryLastWeek));
+    const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
+
+    console.log(from)
 
     return (
         <>
             <div id="select-date-range" className='w-fit flex gap-2 items-center'>
                 <Button
                     paddingX={12}
-                    onClick={() => setFrom(dateStart)}
+                    onClick={() => setFrom(date.formatQueryToInput(dateQueryLastWeek))}
                     _focus={{ outlineColor: 'teal.400' }}>Today</Button>
                 <Divider orientation='vertical' />
                 <div id="select-date-range-wrapper" className='w-fit flex items-center'>
@@ -54,9 +56,8 @@ const SelectDateRange = () => {
                         placeholder="Select Date and Time"
                         size="md"
                         type="datetime-local"
-                        defaultValue={dateStart}
                         value={from}
-
+                        onChange={(e) => console.log(e.target.value)}
                     />
                     <Icon fontSize={36} as={MdArrowRight} />
                     <Input
@@ -64,7 +65,8 @@ const SelectDateRange = () => {
                         placeholder="Select Date and Time"
                         size="md"
                         type="datetime-local"
-                        defaultValue={dateInput}
+                        value={to}
+                        onChange={(e) => setTo(e.target.value)}
                     />
                 </div>
             </div>
@@ -81,7 +83,6 @@ const SelectLimit = ({ children, onChange, value }: { children: JSX.Element | JS
                     style={{ paddingTop: 0 }} // anxiety comes when you comment this
                     onChange={(e) => onChange(e)}
                     value={value}
-                    defaultValue={10}
                 >
                     {children}
                 </Select>

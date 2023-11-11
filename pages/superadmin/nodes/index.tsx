@@ -15,17 +15,24 @@ import Search from '@/components/templates/Search';
 import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
 import { SensorData } from '@/types/Sensor';
+import date from '@/utils/date';
 
 const AdminNodes = () => {
 
+    const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
+
     const toast = useToast();
     const { data: nodes, error: nodeError, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
-    const { data: sensorData, error: sensorError, isLoading: isSensorDataLoading } = useFetch<SensorData>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
+    const { data: sensorData, error: sensorError, isLoading: isSensorDataLoading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=3`, { useLocalStorage: true, earlyFetch: true });
+
+
+    sensorData && console.log(sensorData)
+
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (nodeError) {
-            toast({
+            toast({  
                 title: 'Error!',
                 description: nodeError.message,
                 status: 'error',
