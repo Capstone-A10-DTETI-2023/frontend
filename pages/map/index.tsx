@@ -12,12 +12,13 @@ const MapComponent = dynamic(
 );
 import Alert from "@/components/templates/Alert";
 import LoadingPage from "@/components/templates/LoadingPage";
+import { SensorData } from "@/types/Sensor";
+import date from "@/utils/date";
 
 
 const Map = () => {
 
     const router = useRouter();
-
     const { data: nodes, error, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
 
     return (

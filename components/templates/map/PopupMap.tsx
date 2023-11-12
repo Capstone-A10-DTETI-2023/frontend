@@ -8,6 +8,8 @@ import {
     AlertTitle,
     AlertDescription,
 } from "@chakra-ui/react";
+import { SensorData } from '@/types/Sensor';
+
 import LineChart from '@/components/templates/charts/LineChart';
 
 const Container = ({ children }: { children: JSX.Element | Array<JSX.Element> }) => {
@@ -46,25 +48,15 @@ const Alert = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     )
 }
 
-const Chart = () => {
-    return (
-        <>
-            <div id="chart-wrapper" className='w-full mx-auto'>
-                <LineChart height={200} width='100%' name='Pressure' />
-            </div>
-        </>
-    )
-}
-
-const Information = () => {
+const Information = ({ chartData }: { chartData: SensorData }) => {
     return (
         <>
             <div id="popup-map-information" className='w-full flex flex-col space-y-3'>
-                <Chart />
+                <div id="chart-wrapper" className='w-full mx-auto'>
+                    <LineChart height={200} width='100%' name='Pressure' data={chartData} />
+                </div>
                 <div id="sensor-information" className='flex gap-3 mx-auto'>
-                    <p>turbidity: {0}</p>
-                    <p>temp: {0}</p>
-                    <p>waterflow: {0}</p>
+                    -
                 </div>
             </div>
         </>
