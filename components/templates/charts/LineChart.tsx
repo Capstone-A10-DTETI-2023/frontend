@@ -27,7 +27,7 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
         xAxis: {
             type: 'category',
             boundaryGap: true,
-            data: data?.sensor_data.map((item) => `${item.timestamp.split('T')[0]} ${item.timestamp.split('T')[1].slice(0, -1)}`)
+            data: data?.sensor_data?.map((item) => `${item.timestamp.split('T')[0]} ${item.timestamp.split('T')[1].slice(0, -1)}`)
         },
         yAxis: {
             type: 'value',
@@ -38,7 +38,7 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
                 name: name,
                 type: 'line',
                 smooth: true,
-                data: data?.sensor_data.map((item) => item.value)
+                data: data?.sensor_data?.map((item) => item.value)
             },
         ],
         tooltip: {
@@ -46,9 +46,9 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
         },
     };
 
-    const [option, setOption] = useState(defaultOption);
     const maxLength = 10;
     const msInterval = 1000;
+    // const [option, setOption] = useState(defaultOption);
 
     // const generateRandomData = () => {
     //     const axisData = (new Date()).toLocaleTimeString().replace(/^\D*/, '');
@@ -76,10 +76,12 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
 
     return (
         <>
-            <EChartsReact
-                option={option}
-                style={{ maxHeight: height, width: width }}
-            />
+            {data?.sensor_data &&
+                <EChartsReact
+                    option={defaultOption}
+                    style={{ maxHeight: height, width: width }}
+                />
+            }
         </>
     );
 }

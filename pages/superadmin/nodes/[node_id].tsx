@@ -8,20 +8,26 @@ import Alert from '@/components/templates/Alert';
 import Bar from '@/components/templates/Bar';
 import getDataById from '@/services/localStorage/getNodeDetail';
 import { Node } from '@/types/Node';
-import { Sensor } from '@/types/Sensor';
+import { Sensor, SensorData } from '@/types/Sensor';
 import getData from '@/services/localStorage/getData';
 import getSensorByNodeId from '@/services/localStorage/getSensorByNodeId';
 import useFetch from '@/hooks/crud/useFetch';
+import date from '@/utils/date';
+import getDatum from '@/services/localStorage/getDatum';
 
 const NodeDetails = () => {
-    const [node, setNode] = useState<Node | null>(null);
-    const router = useRouter();
-    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
-    const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
 
+    const [node, setNode] = useState<Node | null>(null);
+    const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
+    const router = useRouter();
+
+    const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
     const nodeId = router.query.node_id;
 
-    const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
+    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
+    const { data: sensorData, isLoading: isSensorDataLoading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${nodeId}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+
 
     // Function to check cached data
     const generateDropdown = async () => {
@@ -30,11 +36,11 @@ const NodeDetails = () => {
             setSensorDropdown(sensor);
         }
         else {
-            console.log(123)
             await fetchSensors();
             await setSensorDropdown(getSensorByNodeId(nodeId!));
         }
     };
+
     const generateNode = async () => {
         const nodes = getData<Node>('/api/v2/nodes');
         if (nodes) {
@@ -44,7 +50,8 @@ const NodeDetails = () => {
             await fetchNodes();
             await setNode(getDataById<Node>(nodeId!, '/api/v2/nodes'));
         }
-    }
+    };
+
 
     const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
         {
@@ -83,9 +90,8 @@ const NodeDetails = () => {
 
     useEffect(() => {
         // Fetch when localStorage is empty
-        generateNode();
         generateDropdown();
-
+        generateNode();
     }, [nodeId]);
 
     return (
@@ -127,8 +133,12 @@ const NodeDetails = () => {
                             </div>
                         </div>
                     </div>
+
                     <div id="chart">
-                        <LineChart height={200} name='Pressure' />
+                        {isSensorDataLoading && <Skeleton height={200} ></Skeleton>}
+                        {!isSensorDataLoading &&
+                            <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
+                        }
                     </div>
                 </div>
             </div>

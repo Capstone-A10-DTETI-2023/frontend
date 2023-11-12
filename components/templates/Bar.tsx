@@ -40,8 +40,6 @@ const SelectDateRange = () => {
     const [from, setFrom] = useState<string>(date.formatQueryToInput(dateQueryLastWeek));
     const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
 
-    console.log(from)
-
     return (
         <>
             <div id="select-date-range" className='w-fit flex gap-2 items-center'>
