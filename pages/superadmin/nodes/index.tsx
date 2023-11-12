@@ -15,7 +15,7 @@ import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import Search from '@/components/templates/Search';
 import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
-import { Sensor, SensorData } from '@/types/Sensor';
+import { SensorData } from '@/types/Sensor';
 import date from '@/utils/date';
 
 const AdminNodes = () => {
@@ -25,10 +25,10 @@ const AdminNodes = () => {
     const toast = useToast();
     const { data: nodes, error: nodeError, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
 
-    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true });
-    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true });
-    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true });
-    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true });
+    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
 
     const sensorData = [
         pressureNode1.data as SensorData,

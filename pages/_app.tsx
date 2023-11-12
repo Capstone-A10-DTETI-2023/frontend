@@ -17,13 +17,13 @@ import "@/styles/global.css";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
-      <ProtectedRouteProvider protectedRoutes={PROTECTED_ROUTES}>
-        <RootLayout>
-          <main className={nunito.className}>
+      <main className={nunito.className}>
+        <ProtectedRouteProvider protectedRoutes={PROTECTED_ROUTES}>
+          <RootLayout>
             <Component {...pageProps} />
-          </main>
-        </RootLayout>
-      </ProtectedRouteProvider>
+          </RootLayout>
+        </ProtectedRouteProvider>
+      </main>
     </ChakraProvider>
   )
 };

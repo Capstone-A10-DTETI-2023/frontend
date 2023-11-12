@@ -8,34 +8,49 @@ import Alert from '@/components/templates/Alert';
 import Bar from '@/components/templates/Bar';
 import getDataById from '@/services/localStorage/getNodeDetail';
 import { Node } from '@/types/Node';
-import { Sensor } from '@/types/Sensor';
+import { Sensor, SensorData } from '@/types/Sensor';
 import getData from '@/services/localStorage/getData';
 import getSensorByNodeId from '@/services/localStorage/getSensorByNodeId';
 import useFetch from '@/hooks/crud/useFetch';
+import date from '@/utils/date';
 
 const NodeDetails = () => {
-    const [node, setNode] = useState<Node | null>(null);
-    
-    const router = useRouter();
-    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
-    const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
 
+    const [node, setNode] = useState<Node | null>(null);
+    const router = useRouter();
+    const isLeakage: boolean = true; // Fetch from backend
     const nodeId = router.query.node_id;
 
+    // Bar 
     const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
+    const [selectedSensor, setSelectedSensor] = useState<number>(0);
+    const [selectedLimit, setSelectedLimit] = useState<number>(10);
+    const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
+        setState(e.target.value);
+    }
+
+    const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
+
+    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+
 
     // Function to check cached data
     const generateDropdown = async () => {
         const sensor = getSensorByNodeId(nodeId!)
         if (sensor) {
             setSensorDropdown(sensor);
+            setSelectedSensor(sensor[0]?.id);
         }
         else {
-            console.log(123)
             await fetchSensors();
-            await setSensorDropdown(getSensorByNodeId(nodeId!));
+            const sensor = await getSensorByNodeId(nodeId!)
+            await setSensorDropdown(sensor);
+            await setSelectedSensor(sensor[0]?.id);
         }
     };
+
     const generateNode = async () => {
         const nodes = getData<Node>('/api/v2/nodes');
         if (nodes) {
@@ -45,7 +60,8 @@ const NodeDetails = () => {
             await fetchNodes();
             await setNode(getDataById<Node>(nodeId!, '/api/v2/nodes'));
         }
-    }
+    };
+
 
     const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
         {
@@ -73,21 +89,18 @@ const NodeDetails = () => {
             unit: 'psi'
         },
     ]
-    const isLeakage: boolean = true; // Fetch from backend
-
-    const [selectedSensor, setSelectedSensor] = useState<string>('');
-    const [selectedLimit, setSelectedLimit] = useState<number>(10);
-    const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
-        setState(e.target.value);
-    }
 
 
     useEffect(() => {
         // Fetch when localStorage is empty
-        generateNode();
         generateDropdown();
-
+        generateNode();
     }, [nodeId]);
+
+    // Fetch sensor data when selectedSensor changes
+    useEffect(() => {
+        fetchSensorData();
+    }, [selectedSensor])
 
     return (
         <>
@@ -108,7 +121,7 @@ const NodeDetails = () => {
                         <div id="top-content-wrapper" className="flex flex-row justify-between w-full mb-4">
                             <Bar.SelectSensor onChange={(e) => handleSelect(e, setSelectedSensor)} value={selectedSensor}>
                                 {sensorDropdown && sensorDropdown.map((sensor) =>
-                                    <option className='text-black' key={sensor?.id} value={sensor?.name}>{sensor.name}</option>
+                                    <option className='text-black' key={sensor?.id} value={sensor?.id}>{sensor.name}</option>
                                 )}
                             </Bar.SelectSensor>
                             <div id="top-right-content-wrapper">
@@ -128,8 +141,12 @@ const NodeDetails = () => {
                             </div>
                         </div>
                     </div>
+
                     <div id="chart">
-                        <LineChart height={200} name='Pressure' />
+                        {isSensorDataLoading && <Skeleton height={200} ></Skeleton>}
+                        {!isSensorDataLoading &&
+                            <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
+                        }
                     </div>
                 </div>
             </div>

@@ -18,15 +18,23 @@ import getDatum from '@/services/localStorage/getDatum';
 const NodeDetails = () => {
 
     const [node, setNode] = useState<Node | null>(null);
-    const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
     const router = useRouter();
+    const isLeakage: boolean = true; // Fetch from backend
+    const nodeId = router.query.node_id;
+
+    // Bar 
+    const [sensorDropdown, setSensorDropdown] = useState<Array<Sensor>>([]);
+    const [selectedSensor, setSelectedSensor] = useState<number>(0);
+    const [selectedLimit, setSelectedLimit] = useState<number>(10);
+    const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
+        setState(e.target.value);
+    }
 
     const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
-    const nodeId = router.query.node_id;
 
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${nodeId}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
 
 
     // Function to check cached data
@@ -34,10 +42,13 @@ const NodeDetails = () => {
         const sensor = getSensorByNodeId(nodeId!)
         if (sensor) {
             setSensorDropdown(sensor);
+            setSelectedSensor(sensor[0]?.id);
         }
         else {
             await fetchSensors();
-            await setSensorDropdown(getSensorByNodeId(nodeId!));
+            const sensor = await getSensorByNodeId(nodeId!)
+            await setSensorDropdown(sensor);
+            await setSelectedSensor(sensor[0]?.id);
         }
     };
 
@@ -79,13 +90,6 @@ const NodeDetails = () => {
             unit: 'psi'
         },
     ]
-    const isLeakage: boolean = true; // Fetch from backend
-
-    const [selectedSensor, setSelectedSensor] = useState<string>('');
-    const [selectedLimit, setSelectedLimit] = useState<number>(10);
-    const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
-        setState(e.target.value);
-    }
 
 
     useEffect(() => {
@@ -93,6 +97,11 @@ const NodeDetails = () => {
         generateDropdown();
         generateNode();
     }, [nodeId]);
+
+    // Fetch sensor data when selectedSensor changes
+    useEffect(() => {
+        fetchSensorData();
+    }, [selectedSensor])
 
     return (
         <>
@@ -113,7 +122,7 @@ const NodeDetails = () => {
                         <div id="top-content-wrapper" className="flex flex-row justify-between w-full mb-4">
                             <Bar.SelectSensor onChange={(e) => handleSelect(e, setSelectedSensor)} value={selectedSensor}>
                                 {sensorDropdown && sensorDropdown.map((sensor) =>
-                                    <option className='text-black' key={sensor?.id} value={sensor?.name}>{sensor.name}</option>
+                                    <option className='text-black' key={sensor?.id} value={sensor?.id}>{sensor.name}</option>
                                 )}
                             </Bar.SelectSensor>
                             <div id="top-right-content-wrapper">

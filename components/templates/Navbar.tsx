@@ -77,6 +77,13 @@ const Navbar = () => {
             roles: ['SUPERADMIN'],
             authOnly: true
         },
+        {
+            id: 'actuator',
+            url: '/superadmin/actuator',
+            label: 'Actuator',
+            roles: ['SUPERADMIN'],
+            authOnly: true
+        },
     ];
 
     return (

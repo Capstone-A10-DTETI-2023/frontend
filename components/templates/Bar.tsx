@@ -11,7 +11,7 @@ import {
 import { MdArrowRight, MdDownload, MdRefresh } from 'react-icons/md'
 import date from '@/utils/date'
 
-const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | JSX.Element[], onChange: (e: ChangeEvent<HTMLSelectElement>) => void, value: string }) => {
+const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | JSX.Element[], onChange: (e: ChangeEvent<HTMLSelectElement>) => void, value: number }) => {
     return (
         <>
             <div id="select-sensor-wrapper" className='w-fit'>

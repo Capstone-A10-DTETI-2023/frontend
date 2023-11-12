@@ -9,19 +9,19 @@ const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useInde
     const [error, setError] = useState<FetchResponse<T>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const fetchData = async () => {
+    const fetchData = async (baseurl: string = url) => {
         setIsLoading(true);
         try {
-            const response = await fetcher.get(url);
+            const response = await fetcher.get(baseurl);
             setData({ message: response.data.message, data: response.data.data });
 
             if (options?.useLocalStorage && localStorage) {
-                localStorage.setItem(options.localStorageKey || url, JSON.stringify(response.data.data));
+                localStorage.setItem(options.localStorageKey || baseurl, JSON.stringify(response.data.data));
             }
 
             if (options?.useIndexedDB) {
                 const db = await indexedDb.init();
-                await indexedDb.save<T>(response.data.data, url);
+                await indexedDb.save<T>(response.data.data, baseurl);
                 db.close();
             }
         }

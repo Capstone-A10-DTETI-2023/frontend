@@ -4,6 +4,7 @@ const PROTECTED_ROUTES: Array<string> = [
     '/superadmin/manage-user',
     '/superadmin/nodes',
     '/superadmin/sensors',
+    '/superadmin/actuator',
     '/technician/nodes',
     '/profile',
     '/notification',
