@@ -3,8 +3,12 @@ import { MdArrowCircleRight, MdLocationPin, MdWarning } from "react-icons/md";
 import Link from 'next/link';
 import LineChart from "@/components/templates/charts/LineChart";
 import { IconButton, Icon } from '@chakra-ui/react'
+import { SensorData } from '@/types/Sensor';
 
 const VariantContext = createContext('');
+const isSensorData = (data: SensorData | SensorData[] | null): data is SensorData => {
+    return !Array.isArray(data);
+}
 
 const Container = ({ children, variant }: { children: JSX.Element | Array<JSX.Element>, variant: string }) => {
 
@@ -48,7 +52,8 @@ const Title = ({ children }: { children: string }) => {
     )
 }
 
-const Body = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+const Body = ({ children, chartData }: { children: JSX.Element | JSX.Element[], chartData: SensorData }) => {
+
     return (
         <>
             <div id="node-body" className="flex flex-row gap-4 basis-5/6">
@@ -60,7 +65,7 @@ const Body = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
                 </div>
                 <div id="chart-wrapper" className='p-4 basis-2/3 rounded-md outline outline-1 bg-white outline-gray-300'>
                     <h6 className='font-semibold mb-2 text-lg' >Pressure Value:</h6>
-                    <LineChart height={100} name='Pressure'/>
+                    <LineChart height={100} name='Pressure' data={chartData} />
                 </div>
             </div>
         </>

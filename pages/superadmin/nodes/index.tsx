@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
     useToast,
-    Button
+    Button,
+    Skeleton
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import Link from 'next/link';
@@ -14,7 +15,7 @@ import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import Search from '@/components/templates/Search';
 import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
-import { SensorData } from '@/types/Sensor';
+import { Sensor, SensorData } from '@/types/Sensor';
 import date from '@/utils/date';
 
 const AdminNodes = () => {
@@ -23,16 +24,24 @@ const AdminNodes = () => {
 
     const toast = useToast();
     const { data: nodes, error: nodeError, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
-    const { data: sensorData, error: sensorError, isLoading: isSensorDataLoading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=3`, { useLocalStorage: true, earlyFetch: true });
 
+    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true, localStorageKey: 'pressureNode1' });
+    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true, localStorageKey: 'pressureNode2' });
+    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true, localStorageKey: 'pressureNode3' });
+    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { useLocalStorage: true, earlyFetch: true, localStorageKey: 'pressureNode4' });
 
-    sensorData && console.log(sensorData)
+    const sensorData = [
+        pressureNode1.data as SensorData,
+        pressureNode2.data as SensorData,
+        pressureNode3.data as SensorData,
+        pressureNode4.data as SensorData
+    ]
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (nodeError) {
-            toast({  
+            toast({
                 title: 'Error!',
                 description: nodeError.message,
                 status: 'error',
@@ -40,16 +49,16 @@ const AdminNodes = () => {
                 isClosable: true,
             })
         }
-        if (sensorError) {
+        if (pressureNode1Error || pressureNode2Error || pressureNode3Error || pressureNode4Error) {
             toast({
                 title: 'Error!',
-                description: sensorError.message,
+                description: 'Error when fetching sensor data',
                 status: 'error',
                 duration: 5000,
                 isClosable: true,
             })
         }
-    }, [nodeError, sensorError])
+    }, [nodeError, pressureNode1Error, pressureNode2Error, pressureNode3Error, pressureNode4Error])
 
 
     return (
@@ -74,14 +83,16 @@ const AdminNodes = () => {
             <Search />
             <div id="nodes" className="flex flex-col gap-4">
                 {!!nodeError && <Alert.Error>{nodeError.message}</Alert.Error>}
-                {!!sensorError && <Alert.Error>{sensorError.message}</Alert.Error>}
-                {!isNodesLoading && !isSensorDataLoading && !nodes.data && <>You have no nodes</>}
+                {(pressureNode1Error || pressureNode2Error || pressureNode3Error || pressureNode4Error) && <Alert.Error>{'Error when fetching sensor data'}</Alert.Error>}
+                {!isNodesLoading && !nodes.data && <>You have no nodes</>}
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
-                    <Node.Container key={i} variant={node.id !== 1 ? 'normal' : 'warning'}>
+                    <Node.Container key={node.id} variant={node.id !== 1 ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
-                        <Node.Body>
-                            <>
+                        {(isPressureNode1Loading || isPressureNode2Loading || isPressureNode3Loading || isPressureNode4Loading) ?
+                            <LoadingPage>Load sensor data...</LoadingPage>
+                            :
+                            <Node.Body chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} >
                                 <div className="flex-col flex gap-2">
                                     <div id="lat-lng">
                                         <p>Latitude: {Number(node.coordinate[0]).toFixed(3)}</p>
@@ -93,8 +104,8 @@ const AdminNodes = () => {
                                         </Link>
                                     </Button>
                                 </div>
-                            </>
-                        </Node.Body>
+                            </Node.Body>
+                        }
                         <Node.Button href={`/superadmin/nodes/${node.id}`} />
                     </Node.Container>
                 )}

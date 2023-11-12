@@ -83,71 +83,69 @@ const MenuNotification = ({ children }: { children: JSX.Element }) => {
                 <MenuButton>
                     {children}
                 </MenuButton>
-                <MenuList px={2}>
-                    <MenuItem _hover={{ bgColor: 'white' }} _focus={{ bgColor: 'white' }}>
-                        <form onSubmit={handleChangeNotifPrefs}>
-                            <div className="notification-menu-wrapper space-y-3 text-base" onClick={e => e.stopPropagation()}>
-                                <h6 className="font-semibold text-lg">Notification Preferences</h6>
-                                <div id="email" className='flex flex-row gap-2'>
-                                    <Checkbox
-                                        size={'lg'}
-                                        isChecked={payload.email}
-                                        onChange={(e) => {
-                                            setPayload({ ...payload, email: !payload.email });
-                                        }}
-                                    />
-                                    <p>Email: {user?.notificationPref.email}</p>
-                                </div>
-                                <div id="whatsapp" className='flex flex-row gap-2'>
-                                    <Checkbox
-                                        size={'lg'}
-                                        isChecked={payload.whatsapp}
-                                        onChange={(e) => {
-                                            setPayload({ ...payload, whatsapp: !payload.whatsapp });
-                                        }}
-                                    />
-                                    <p>WhatsApp: {user?.notificationPref.whatsapp}</p>
-                                </div>
-                                <div id="firebase" className='flex flex-row gap-2'>
-                                    <Checkbox
-                                        size={'lg'}
-                                        isChecked={payload.firebase}
-                                        onChange={(e) => {
-                                            setPayload({ ...payload, firebase: !payload.firebase });
-                                        }}
-                                    />
-                                    <p>Firebase: {user?.notificationPref.firebase}</p>
-                                </div>
-                                {isValueChanged &&
-                                    <SlideFade in={isValueChanged} offsetY='-20px'>
-                                        <div id="button-change-wrapper" className='space-x-1'>
-                                            <Button
-                                                colorScheme='blue'
-                                                loadingText="Saving.."
-                                                isLoading={isLoading}
-                                                type='submit'
-                                                size={'sm'}
-                                            >
-                                                Save Changes
-                                            </Button>
-                                            <Button
-                                                loadingText="Cancel"
-                                                isLoading={isLoading}
-                                                type='button'
-                                                size={'sm'}
-                                                variant={'outline'}
-                                                onClick={(e) => {
-                                                    setPayload({ ...firstPayload });
-                                                }}
-                                            >
-                                                Cancel
-                                            </Button>
-                                        </div>
-                                    </SlideFade>
-                                }
+                <MenuList px={4}>
+                    <form onSubmit={handleChangeNotifPrefs}>
+                        <div className="notification-menu-wrapper space-y-3 text-base" onClick={e => e.stopPropagation()}>
+                            <h6 className="font-semibold text-lg">Notification Preferences</h6>
+                            <div id="email" className='flex flex-row gap-2 text-base font-normal'>
+                                <Checkbox
+                                    size={'lg'}
+                                    isChecked={payload.email}
+                                    onChange={(e) => {
+                                        setPayload({ ...payload, email: !payload.email });
+                                    }}
+                                />
+                                <p>Email: {user?.notificationPref.email}</p>
                             </div>
-                        </form>
-                    </MenuItem>
+                            <div id="whatsapp" className='flex flex-row gap-2  text-base font-normal'>
+                                <Checkbox
+                                    size={'lg'}
+                                    isChecked={payload.whatsapp}
+                                    onChange={(e) => {
+                                        setPayload({ ...payload, whatsapp: !payload.whatsapp });
+                                    }}
+                                />
+                                <p>WhatsApp: {user?.notificationPref.whatsapp}</p>
+                            </div>
+                            <div id="firebase" className='flex flex-row gap-2 text-base font-normal'>
+                                <Checkbox
+                                    size={'lg'}
+                                    isChecked={payload.firebase}
+                                    onChange={(e) => {
+                                        setPayload({ ...payload, firebase: !payload.firebase });
+                                    }}
+                                />
+                                <p>Firebase: {user?.notificationPref.firebase}</p>
+                            </div>
+                            {isValueChanged &&
+                                <SlideFade in={isValueChanged} offsetY='-20px'>
+                                    <div id="button-change-wrapper" className='space-x-1'>
+                                        <Button
+                                            colorScheme='blue'
+                                            loadingText="Saving.."
+                                            isLoading={isLoading}
+                                            type='submit'
+                                            size={'sm'}
+                                        >
+                                            Save Changes
+                                        </Button>
+                                        <Button
+                                            loadingText="Cancel"
+                                            isLoading={isLoading}
+                                            type='button'
+                                            size={'sm'}
+                                            variant={'outline'}
+                                            onClick={(e) => {
+                                                setPayload({ ...firstPayload });
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </SlideFade>
+                            }
+                        </div>
+                    </form>
                 </MenuList>
             </Menu>
         </>

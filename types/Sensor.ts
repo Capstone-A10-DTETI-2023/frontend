@@ -12,7 +12,9 @@ export type Sensor = {
 }
 
 export type SensorData = {
-
+    id_node: string,
+    id_sensor: string,
+    sensor_data: Array<{ timestamp: string, value: string }>
 }
 
 export type SensorPayload = {

@@ -15,6 +15,7 @@ import useFetch from '@/hooks/crud/useFetch';
 
 const NodeDetails = () => {
     const [node, setNode] = useState<Node | null>(null);
+    
     const router = useRouter();
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });

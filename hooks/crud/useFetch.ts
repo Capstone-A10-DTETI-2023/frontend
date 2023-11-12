@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 import fetcher from '@/services/fetcher';
 import indexedDb from '@/services/indexedDB/indexedDb';
 
-const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean, earlyFetch?: boolean }) => {
+const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean, earlyFetch?: boolean, localStorageKey?: string }) => {
     const [data, setData] = useState<FetchResponse<T>['data']>({ message: '', data: null });
     const [error, setError] = useState<FetchResponse<T>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -16,7 +16,7 @@ const useFetch = <T>(url: string, options?: { useLocalStorage?: boolean, useInde
             setData({ message: response.data.message, data: response.data.data });
 
             if (options?.useLocalStorage && localStorage) {
-                localStorage.setItem(url, JSON.stringify(response.data.data));
+                localStorage.setItem(options.localStorageKey || url, JSON.stringify(response.data.data));
             }
 
             if (options?.useIndexedDB) {
