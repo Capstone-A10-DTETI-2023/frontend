@@ -41,7 +41,21 @@ const SignUp = () => {
             </div>
             <div className="form-box outline outline-1 outline-gray-200 rounded-lg shadow-lg p-8 w-96 md:w-[32rem] mx-auto" >
                 <Stack spacing={4}>
-                    <form onSubmit={handleSignUp}>
+                    <form onSubmit={handleSignUp}>v
+                        <FormControl id="phone_num" isRequired>
+                            <FormLabel>Phone Number</FormLabel>
+                            <InputGroup>
+                                <InputLeftElement pointerEvents='none'>
+                                    <MdPhone color='gray.300' />
+                                </InputLeftElement>
+                                <Input
+                                    type='tel'
+                                    placeholder='081234568900'
+                                    onChange={(e) => { setPayload({ ...payload, phone_num: e.target.value }) }}
+                                />
+                            </InputGroup>
+                            <FormHelperText>*Your phone number used for WhatsApp push notification</FormHelperText>
+                        </FormControl>
                         <FormControl id="name" isRequired>
                             <FormLabel>Username</FormLabel>
                             <Input
@@ -57,23 +71,10 @@ const SignUp = () => {
                                 placeholder='john@doe.com'
                                 onChange={(e) => { setPayload({ ...payload, email: e.target.value }) }}
                             />
-                        </FormControl>
-                        <FormControl id="phone_num" isRequired>
-                            <FormLabel>Phone Number</FormLabel>
-                            <InputGroup>
-                                <InputLeftElement pointerEvents='none'>
-                                    <MdPhone color='gray.300' />
-                                </InputLeftElement>
-                                <Input
-                                    type='tel'
-                                    placeholder='081234568900'
-                                    onChange={(e) => { setPayload({ ...payload, phone_num: e.target.value }) }}
-                                />
-                            </InputGroup>
                             <FormHelperText>*Your password is automatically generated and sent via WhatsApp</FormHelperText>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
-                            {!!error && <Alert.Error>{error.message}</Alert.Error>}
+                            {!!error?.message && <Alert.Error>{error.message}</Alert.Error>}
                             <Button
                                 loadingText="Signing Up.."
                                 type='submit'

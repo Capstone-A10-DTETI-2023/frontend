@@ -25,7 +25,7 @@ const ProtectedRouteProvider = (props: { children: ReactElement, protectedRoutes
         }
 
         if (userRole) {
-            if ((!(userRole === 'SUPERADMIN') && pathIsAdminOnly(router.pathname)) || (!(userRole === 'TECHNICIAN') && pathIsTechnicianOnly(router.pathname))) {
+            if ((!(userRole === 'SUPERADMIN') && pathIsAdminOnly(router.pathname)) || (!(userRole === 'TEKNISI') && pathIsTechnicianOnly(router.pathname))) {
                 router.push('/access-denied');
             }
         }

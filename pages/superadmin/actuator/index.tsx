@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import {
     Button,
-    Badge
+    Badge,
+    Slider,
+    SliderMark,
+    Tooltip,
+    SliderTrack,
+    SliderFilledTrack,
+    SliderThumb
 } from "@chakra-ui/react";
 
-import { Node } from "@/types/Node";
+import { Node, NodePayload } from "@/types/Node";
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import getData from "@/services/localStorage/getData";
 import getDataById from "@/services/localStorage/getNodeDetail";
@@ -15,6 +21,10 @@ const Actuator = () => {
     const [isValveActive, setIsValveActive] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+
+    const [payload, setPayload] = useState<number>(0);
+    const [randomPayload, setRandomPayload] = useState<number>(payload);
+    const [showTooltip, setShowTooltip] = useState<boolean>(false)
 
     const generateNode = async () => {
         const nodes = getData<Node>('/api/v2/nodes');
@@ -27,6 +37,11 @@ const Actuator = () => {
         }
     };
 
+    const generateRandomPressure = () => {
+        const randomPressure = payload + Math.random() * 1.0;
+        payload === 0 ? setRandomPayload(payload) : setRandomPayload(randomPressure)
+    }
+
     const handleActivate = () => {
         setIsLoading(true);
         setIsValveActive(!isValveActive);
@@ -38,6 +53,14 @@ const Actuator = () => {
         generateNode();
     }, []);
 
+    useEffect(() => {
+        const timer = setInterval(() => {
+            generateRandomPressure();
+        }, 500)
+
+        return () => clearInterval(timer)
+    })
+
     return (
         <>
             <div className="breadcrumbs mb-6">
@@ -48,14 +71,53 @@ const Actuator = () => {
                 <div id="node-wrapper" className="flex flex-row justify-between items-center">
                     <div id="content-left" className="flex items-center gap-4">
                         <h6 id="node-title" className="font-bold text-lg">{node?.name}</h6>
-                        <Badge colorScheme={!isValveActive ? 'green' : 'red'} fontSize={12} className="h-fit">{!isValveActive ? 'Activated' : 'Deactivated'}</Badge>
+                        <Badge colorScheme={(isValveActive || payload === 0) ? 'red' : 'green'} fontSize={12} className="h-fit">{(isValveActive || payload === 0) ? 'Deactivated' : 'Activated'}</Badge>
+                        <p>Current Pressure: <span className="font-bold">{randomPayload.toFixed(2)}</span></p>
                     </div>
-                    <Button
-                        colorScheme="teal"
-                        className="w-fit"
-                        loadingText={isValveActive ? 'Turning off..' : 'Turning on..'}
-                        isLoading={isLoading}
-                        onClick={handleActivate}>{isValveActive ? 'Turn On Valve' : 'Turn Off Valve'}</Button>
+                    <div id="content-right" className="flex flex-row gap-4 items-center">
+                        <div id="slider" className="w-96 px-4">
+                            <Slider
+                                size={'lg'}
+                                aria-label='Slider Leakage'
+                                defaultValue={payload}
+                                min={0}
+                                max={50}
+                                step={0.01}
+                                onChange={(val) => setPayload(val)}
+                                onMouseEnter={() => setShowTooltip(true)}
+                                onMouseLeave={() => setShowTooltip(false)}
+                            >
+                                <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
+                                    0
+                                </SliderMark>
+                                <SliderMark value={25} mt='1' ml='-2.5' fontSize='sm'>
+                                    25
+                                </SliderMark>
+                                <SliderMark value={50} mt='1' ml='-2.5' fontSize='sm'>
+                                    50
+                                </SliderMark>
+                                <SliderTrack>
+                                    <SliderFilledTrack />
+                                </SliderTrack>
+                                <Tooltip
+                                    hasArrow
+                                    bg='teal.500'
+                                    color='white'
+                                    placement='top'
+                                    isOpen={showTooltip}
+                                    label={`${payload}`}
+                                >
+                                    <SliderThumb boxSize={6} />
+                                </Tooltip>
+                            </Slider>
+                        </div>
+                        {/* <Button
+                            colorScheme="teal"
+                            className="w-fit"
+                            loadingText={isValveActive ? 'Turning off..' : 'Turning on..'}
+                            isLoading={isLoading}
+                            onClick={handleActivate}>{(isValveActive || payload === 0) ? 'Turn On Valve' : 'Turn Off Valve'}</Button> */}
+                    </div>
                 </div>
             </div>
         </>

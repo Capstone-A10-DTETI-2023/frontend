@@ -8,12 +8,12 @@ import {
 
 import { MdSearch } from 'react-icons/md';
 
-const Search = () => {
+const Search = ({ placeholder }: { placeholder: string }) => {
     return (
         <>
             <div id="search-wrapper" className='flex flex-row justify-start items-start gap-4 mb-6'>
                 <InputGroup>
-                    <Input placeholder='Search your node here..' />
+                    <Input placeholder={placeholder} />
                     <InputRightElement>
                         <Icon as={MdSearch} />
                     </InputRightElement>

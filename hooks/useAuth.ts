@@ -69,6 +69,7 @@ const useAuth = () => {
             await fetcher.post('/api/v2/auth/logout', '');
             await setUser(null);
             sessionStorage.removeItem('user');
+            localStorage.clear();
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.response?.data });

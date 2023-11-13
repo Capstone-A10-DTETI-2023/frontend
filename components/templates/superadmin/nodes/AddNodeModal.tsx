@@ -74,7 +74,7 @@ const AddNodeModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
     // Toast
     const toast = useToast();
     useEffect(() => {
-        if (error) {
+        if (error?.message) {
             toast({
                 title: 'Error!',
                 description: error.message,

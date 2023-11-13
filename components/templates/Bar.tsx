@@ -89,7 +89,7 @@ const SelectLimit = ({ children, onChange, value }: { children: JSX.Element | JS
     )
 }
 
-const Buttons = () => {
+const Buttons = ({ reload }: { reload: () => void }) => {
     return (
         <>
             <div id="buttons-wrapper" className="space-x-2">
@@ -104,6 +104,7 @@ const Buttons = () => {
                     size='md'
                     variant={'outline'}
                     icon={<MdRefresh />}
+                    onClick={reload}
                 />
             </div>
         </>

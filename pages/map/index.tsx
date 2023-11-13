@@ -25,7 +25,7 @@ const Map = () => {
         <>
             <section className="container">
                 <section id="map-wrapper">
-                    {!!error &&
+                    {!!error?.message &&
                         <Alert.Error>{error.message}</Alert.Error>
                     }
                     {!isNodesLoading && !nodes.data &&

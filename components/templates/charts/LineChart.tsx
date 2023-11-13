@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import EChartsReact from "echarts-for-react";
 import lodash from 'lodash'
+import { Skeleton } from '@chakra-ui/react'
 import { SensorData } from "@/types/Sensor";
 
-const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height: number, width?: string, name: string, data: SensorData | null }) => {
+const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height: number, width?: string, name: string, data: SensorData }) => {
+
+    const maxLength = 10;
+    const msInterval = 1000;
 
     const getSeriesData = () => {
         let res = [];
@@ -46,8 +50,8 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
         },
     };
 
-    const maxLength = 10;
-    const msInterval = 1000;
+
+
     // const [option, setOption] = useState(defaultOption);
 
     // const generateRandomData = () => {

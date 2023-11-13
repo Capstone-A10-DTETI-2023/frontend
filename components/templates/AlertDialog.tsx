@@ -46,7 +46,7 @@ const AlertDialog = ({ title, description, isOpen, setIsOpen, isLoading, onClick
                                 }}
                                 onClick={onClick}
                                 ml={3}>
-                                Sign Out
+                                {title}
                             </Button>
                         </AlertDialogFooter>
                     </AlertDialogContent>

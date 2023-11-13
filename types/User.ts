@@ -29,10 +29,10 @@ export type ResetPasswordPayload = {
     phone_num: string;
 }
 
-// export type User = {
-//     id: number;
-//     role_id: number;
-//     name: string;
-//     email: string;
-//     phone_num: string;
-// }
+export type UserPayload = {
+    Name: string,
+    RoleID: number,
+    Email: string,
+    Phone_Num: string,
+    Password: string
+}

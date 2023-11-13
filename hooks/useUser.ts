@@ -23,7 +23,7 @@ const useUser = () => {
         finally {
             setIsLoading(false);
         }
-    }
+    };
 
     // Always run when useUser initialized, to get current logged in user from storage;
     const getCurrentUser = () => {

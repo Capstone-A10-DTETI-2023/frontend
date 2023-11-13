@@ -25,10 +25,10 @@ const AdminNodes = () => {
     const toast = useToast();
     const { data: nodes, error: nodeError, isLoading: isNodesLoading } = useFetch<NodeType>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
 
-    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
+    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
 
     const sensorData = [
         pressureNode1.data as SensorData,
@@ -40,7 +40,7 @@ const AdminNodes = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        if (nodeError) {
+        if (nodeError?.message) {
             toast({
                 title: 'Error!',
                 description: nodeError.message,
@@ -49,7 +49,7 @@ const AdminNodes = () => {
                 isClosable: true,
             })
         }
-        if (pressureNode1Error || pressureNode2Error || pressureNode3Error || pressureNode4Error) {
+        if (pressureNode1Error?.message || pressureNode2Error?.message || pressureNode3Error?.message || pressureNode4Error?.message) {
             toast({
                 title: 'Error!',
                 description: 'Error when fetching sensor data',
@@ -80,14 +80,14 @@ const AdminNodes = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Pipe Node Unit (PNU)</h3>
-            <Search />
+            <Search placeholder='Search node here..' />
             <div id="nodes" className="flex flex-col gap-4">
-                {!!nodeError && <Alert.Error>{nodeError.message}</Alert.Error>}
-                {(pressureNode1Error || pressureNode2Error || pressureNode3Error || pressureNode4Error) && <Alert.Error>{'Error when fetching sensor data'}</Alert.Error>}
+                {!!nodeError?.message && <Alert.Error>{nodeError.message}</Alert.Error>}
+                {(pressureNode1Error?.message || pressureNode2Error?.message || pressureNode3Error?.message || pressureNode4Error?.message) && <Alert.Error>{'Error when fetching sensor data'}</Alert.Error>}
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
                 {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
-                    <Node.Container key={node.id} variant={node.id !== 1 ? 'normal' : 'warning'}>
+                    <Node.Container key={node.id} variant={node.id !== 6 ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
                         {(isPressureNode1Loading || isPressureNode2Loading || isPressureNode3Loading || isPressureNode4Loading) ?
                             <LoadingPage>Load sensor data...</LoadingPage>

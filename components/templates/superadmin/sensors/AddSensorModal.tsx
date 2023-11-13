@@ -22,14 +22,12 @@ import { SensorPayload } from '@/types/Sensor';
 import useCreate from '@/hooks/crud/useCreate';
 import { Node } from '@/types/Node';
 import getData from '@/services/localStorage/getData';
+import SENSOR_TYPES from '@/utils/constants/sensorTypes';
 
 const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
 
     // Dropdown from localStorage
     const [nodesDropdown, setNodesDropdown] = useState<Array<Node>>([]);
-    useEffect(() => {
-        setNodesDropdown(getData<Node>('/api/vw/nodes'));
-    }, [])
 
     // Payload and Create
     const [payload, setPayload] = useState<SensorPayload>({
@@ -60,7 +58,7 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
     // Toast
     const toast = useToast();
     useEffect(() => {
-        if (error) {
+        if (error?.message) {
             toast({
                 title: 'Error!',
                 description: error.message,
@@ -70,6 +68,7 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
             })
         }
     }, [error]);
+
     useEffect(() => {
         if (message === 'success') {
             toast({
@@ -80,7 +79,11 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                 isClosable: true,
             })
         }
-    }, [message])
+    }, [message]);
+
+    useEffect(() => {
+        setNodesDropdown(getData<Node>('/api/v2/nodes'));
+    }, [])
 
 
     return (
@@ -107,12 +110,14 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                                 </FormControl>
                                 <FormControl id="sensorType" isRequired>
                                     <FormLabel>Sensor Type</FormLabel>
-                                    <Input
-                                        type="number"
-                                        placeholder='1'
+                                    <Select
+                                        placeholder='Choose your sensor type'
                                         onChange={(e) => setPayload({ ...payload, SensorType: parseInt(e.target.value) })}
-                                        value={payload.SensorType}
-                                    />
+                                    >
+                                        {SENSOR_TYPES && SENSOR_TYPES.map((sensorType) =>
+                                            <option key={sensorType.id} value={sensorType.id}>{sensorType.name}</option>
+                                        )}
+                                    </Select>
                                 </FormControl>
                                 <FormControl id="unit" isRequired>
                                     <FormLabel>Unit</FormLabel>
@@ -155,14 +160,14 @@ const AddSensorModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                                         Use Alarm?
                                     </Checkbox>
                                 </FormControl>
-                                <FormControl id="tolerance" isRequired>
-                                    <FormLabel>Tolerance</FormLabel>
+                                <FormControl id="correspendingNode" isRequired>
+                                    <FormLabel>Corresponding Node</FormLabel>
                                     <Select
                                         placeholder='Choose correspending node'
                                         onChange={(e) => setPayload({ ...payload, NodeID: parseInt(e.target.value) })}
                                     >
                                         {nodesDropdown && nodesDropdown.map((node) =>
-                                            <option value={node.id}>{node.name}</option>
+                                            <option key={node.id} value={node.id}>{node.name}</option>
                                         )}
                                     </Select>
                                 </FormControl>

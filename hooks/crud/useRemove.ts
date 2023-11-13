@@ -7,23 +7,23 @@ interface WithId {
     id: number
 }
 
-const useUpdate = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean }) => {
+const useRemove = <T>(url: string, options?: { useLocalStorage?: boolean, useIndexedDB?: boolean, localStorageKey?: string }) => {
     const [data, setData] = useState<FetchResponse<T>['data']>({ message: '', data: null });
     const [error, setError] = useState<FetchResponse<T>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const update = async <P extends WithId>(payload: P, id: number) => {
+    const remove = async <P extends WithId>(id: number, baseurl: string = url) => {
         setIsLoading(true);
         try {
             const response = await fetcher.delete(`${url}/${id}`);
             setData({ message: response.data.message, data: response.data.data });
 
             // Mutate data to local
-            if (response) {
+            if (response && options?.useLocalStorage) {
                 let storageInstance: Storage | null = localStorage;
 
-                const data: Array<P> = JSON.parse(storageInstance.getItem(url)!);
-                const editedData: Array<P> = data.filter((item) => { return response.data.data.id !== item.id })
+                const data: Array<P> = JSON.parse(storageInstance.getItem(options.localStorageKey || baseurl)!);
+                const editedData: Array<P> = data.filter((item) => { return id !== item.id })
 
                 storageInstance?.setItem(url, JSON.stringify(editedData));
 
@@ -43,9 +43,9 @@ const useUpdate = <T>(url: string, options?: { useLocalStorage?: boolean, useInd
         data,
         error,
         isLoading,
-        update
+        remove
     }
 
 }
 
-export default useUpdate;
+export default useRemove;

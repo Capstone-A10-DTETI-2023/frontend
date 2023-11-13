@@ -39,21 +39,21 @@ const Navbar = () => {
             id: 'dashboard',
             url: '/dashboard',
             label: 'Dashboard',
-            roles: ['USER', 'TECHNICIAN', 'SUPERADMIN'],
+            roles: ['GENERAL USER', 'TEKNISI', 'SUPERADMIN'],
             authOnly: true
         },
         {
             id: 'map',
             url: '/map',
             label: 'Map View',
-            roles: ['USER', 'TECHNICIAN', 'SUPERADMIN'],
+            roles: ['GENERAL USER', 'TEKNISI', 'SUPERADMIN'],
             authOnly: true
         },
         {
             id: 'controls',
             url: '/technician/nodes',
             label: 'Nodes',
-            roles: ['TECHNICIAN'],
+            roles: ['TEKNISI'],
             authOnly: true
         },
         {
@@ -78,10 +78,17 @@ const Navbar = () => {
             authOnly: true
         },
         {
-            id: 'actuator',
+            id: 'actuatorAdmin',
             url: '/superadmin/actuator',
             label: 'Actuator',
             roles: ['SUPERADMIN'],
+            authOnly: true
+        },
+        {
+            id: 'actuatorTech',
+            url: '/technician/actuator',
+            label: 'Actuator',
+            roles: ['TEKNISI'],
             authOnly: true
         },
     ];

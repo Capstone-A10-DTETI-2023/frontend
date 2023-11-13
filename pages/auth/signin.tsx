@@ -77,7 +77,7 @@ const SignIn = () => {
                             </div>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
-                            {!!error && <Alert.Error>{error.message}</Alert.Error>}
+                            {!!error?.message && <Alert.Error>{error.message}</Alert.Error>}
                             <Button
                                 loadingText="Signing in.."
                                 type='submit'

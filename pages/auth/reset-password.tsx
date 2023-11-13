@@ -58,7 +58,7 @@ const ResetPassword = () => {
                             <FormHelperText>*Your new password is automatically generated and sent via WhatsApp</FormHelperText>
                         </FormControl>
                         <Stack spacing={10} pt={2}>
-                            {!!error && <Alert.Error>{error.message}</Alert.Error>}
+                            {!!error?.message && <Alert.Error>{error.message}</Alert.Error>}
                             <Button
                                 loadingText="Signing in.."
                                 type='submit'
