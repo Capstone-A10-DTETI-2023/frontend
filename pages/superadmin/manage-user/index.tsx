@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import {
     TableContainer,
@@ -10,23 +10,92 @@ import {
     Td,
     TableCaption,
     Button,
-    Skeleton
+    Skeleton,
+    useToast
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 
-import useFetch from "@/hooks/crud/useFetch";
-import { User } from "@/types/User";
+import { User, UserPayload } from "@/types/User";
 import AddUserModal from "@/components/templates/superadmin/manage-user/AddUserModal";
 import Search from "@/components/templates/Search";
 import Alert from "@/components/templates/Alert";
+import AlertDialog from "@/components/templates/AlertDialog";
+
+import useFetch from "@/hooks/crud/useFetch";
+import useRemove from "@/hooks/crud/useRemove";
+import EditUserModal from "@/components/templates/superadmin/manage-user/EditUserModal";
 
 const ManageUser = () => {
 
     const { data: users, isLoading, error: fetchError } = useFetch<User>('/api/v2/users', { earlyFetch: true });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [selectedData, setSelectedData] = useState<UserPayload | null>(null);
+
+    // Delete User
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const { data: { message: removeMessage }, isLoading: isRemoveLoading, error: removeError, remove } = useRemove<UserPayload>('/api/v2/sensors', { useLocalStorage: true });
+    const handleRemove = async () => {
+        await remove<User>(selectedId!);
+
+        if (!isRemoveLoading) {
+            setIsDialogOpen(false);
+
+            // Cleanup temp state
+            setSelectedId(null);
+            setSelectedData(null);
+        }
+
+    }
+
+    // Update User
+    const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
+
+    // Toast
+    const toast = useToast();
+    useEffect(() => {
+        if (removeError?.message) {
+            toast({
+                title: 'Error!',
+                description: 'Error when removing sensor',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+        if (fetchError?.message) {
+            toast({
+                title: 'Error!',
+                description: 'Error when fetching sensor data',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [fetchError, removeError]);
+
+    useEffect(() => {
+        if (removeMessage === 'success') {
+            toast({
+                title: 'Success!',
+                description: 'Successfully remove sensor',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [removeMessage]);
 
     return (
         <>
+            <AlertDialog
+                title="Delete"
+                description="Are you sure want delete?"
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+                onClick={handleRemove}
+                isLoading={isRemoveLoading}
+            />
             <div id="fab-add-node" className='fixed right-24 bottom-20 z-10'>
                 <Button
                     size={'lg'}
@@ -39,7 +108,14 @@ const ManageUser = () => {
                     onClick={() => setIsModalOpen(true)}
                 >Add User</Button>
             </div>
-            <AddUserModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false) }} />
+            <AddUserModal
+                isOpen={isModalOpen}
+                onClose={() => { setIsModalOpen(false) }} />
+            <EditUserModal
+                pastDataId={selectedId!}
+                pastData={selectedData!}
+                isOpen={isModalUpdateOpen}
+                onClose={() => { setIsModalUpdateOpen(false) }} />
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>
@@ -65,8 +141,8 @@ const ManageUser = () => {
                         <Tbody>
                             {isLoading &&
                                 <Tr>
-                                    {Array.from({ length: 8 }).map(() =>
-                                        <Td><Skeleton>...</Skeleton></Td>
+                                    {Array.from({ length: 8 }).map((_, i) =>
+                                        <Td key={i}><Skeleton>...</Skeleton></Td>
                                     )}
                                 </Tr>
                             }
@@ -78,8 +154,25 @@ const ManageUser = () => {
                                     <Td>{user.name}</Td>
                                     <Td>{user.email}</Td>
                                     <Td>{user.phone_num}</Td>
-                                    <Td><Button variant={'solid'} colorScheme='teal' className='w-full'>Edit</Button></Td>
-                                    <Td><Button variant={'outline'} colorScheme='red' className='w-fit'>Delete</Button></Td>
+                                    <Td>
+                                        <Button variant={'solid'} colorScheme='teal' className='w-full'>
+                                            Edit
+                                        </Button>
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            isLoading={isRemoveLoading}
+                                            loadingText='...'
+                                            onClick={(e) => {
+                                                setSelectedId(user?.id);
+                                                setIsDialogOpen(true);
+                                            }}
+                                            variant={'outline'}
+                                            colorScheme='red'
+                                            className='w-fit'>
+                                            Delete
+                                        </Button>
+                                    </Td>
                                 </Tr>
                             )
                             }

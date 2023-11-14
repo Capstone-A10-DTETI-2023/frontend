@@ -18,6 +18,8 @@ const useRemove = <T>(url: string, options?: { useLocalStorage?: boolean, useInd
             const response = await fetcher.delete(`${url}/${id}`);
             setData({ message: response.data.message, data: response.data.data });
 
+            console.log(response);
+
             // Mutate data to local
             if (response && options?.useLocalStorage) {
                 let storageInstance: Storage | null = localStorage;

@@ -24,7 +24,6 @@ import { Sensor } from "@/types/Sensor";
 import { SensorPayload } from '@/types/Sensor';
 import useFetch from "@/hooks/crud/useFetch";
 import useRemove from '@/hooks/crud/useRemove';
-import useUpdate from '@/hooks/crud/useUpdate';
 
 const AdminSensors = () => {
 
@@ -52,6 +51,7 @@ const AdminSensors = () => {
     // Update Sensor
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
 
+    // Toast
     const toast = useToast();
     useEffect(() => {
         if (removeError?.message) {
@@ -116,7 +116,6 @@ const AdminSensors = () => {
                 pastData={selectedData!}
                 isOpen={isModalUpdateOpen}
                 onClose={() => { setIsModalUpdateOpen(false) }} />
-
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>

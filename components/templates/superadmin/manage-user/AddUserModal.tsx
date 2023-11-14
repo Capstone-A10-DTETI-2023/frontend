@@ -26,8 +26,6 @@ import ROLES from '@/utils/constants/roles';
 
 const AddUserModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
 
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-
     // Payload and Create
     const [payload, setPayload] = useState<UserPayload>({
         Name: "",
@@ -36,6 +34,7 @@ const AddUserModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
         Phone_Num: "",
         Password: ""
     });
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const { data: { message }, isLoading, error, create } = useCreate<UserPayload>('/api/v2/sensors');
     const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
