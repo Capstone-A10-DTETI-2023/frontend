@@ -23,7 +23,7 @@ In this capstone project held by DTETI FT UGM, we, as A-10 team, designed a prot
 ## 🛠 Setup
 ### Setting Up Project
 - Clone this repository <br/>
-  ``` git clone https://github.com/saddansyah/WakeGuard-Frontend.git ``` (if you use http method)
+  ``` git clone https://github.com/Capstone-A10-DTETI-2023/frontend.git ``` (if you use http method)
 - Install required dependencies <br/>
   ``` npm install ```
 - Run the program <br/>
