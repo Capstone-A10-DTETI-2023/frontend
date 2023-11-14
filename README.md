@@ -1,40 +1,42 @@
-# Next.js + Tailwind CSS template
+<h1 align="center">
+  🚰 Capstone A-10 (Frontend) 
+</h1>
 
-This project template aims to simplify the setup of Tailwind CSS on your Next.js app.
+## ❓ About 
+In this capstone project held by DTETI FT UGM, we, as A-10 team, designed a prototype system to monitor water quality and detect leaks in air distribution pipes with residual vector and sensitivity matrix method. In this system, we also added control mechanism to control the pressure pump with PID controller to achieve desired pressure and stop further waste due to leakage.
 
-Before using this template, please make sure that your development environment is ready as stated on [Next.js](https://nextjs.org/learn/basics/create-nextjs-app/setup) website.
+## 🔙 Main Repositories
+[Capstone-A10-DTETI-2023 (Github Orgs)](https://github.com/Capstone-A10-DTETI-2023)
 
-## Create a Next.js App
+## ⌨ Commit Naming Convention
+- `feat` is for adding a new feature
+- `fix` is for fixing a bug
+- `refactor` is for changing code for peformance or convenience purpose (e.g. readibility)
+- `chore` is for everything else (writing documentation, formatting, adding tests, cleaning useless code etc.).  
+<br/>After the category, there should be a ":" announcing the commit description. You could use (scope) to specify which scope are you working to.
 
-To create a Next.js app with this template, open your terminal, `cd` into the directory you'd like to create the app in, and run the command below:
+### Example
+- `feat: add post controller` <br/>
+- `chore: update readme` <br/>
+- `fix(auth): fix signin input now showing`
 
-Note:
-Replace `nextjs-blog` with the project name you'd like to create, eg. `my-nextjs-app`.
+## 🛠 Setup
+### Setting Up Project
+- Clone this repository <br/>
+  ``` git clone https://github.com/saddansyah/WakeGuard-Frontend.git ``` (if you use http method)
+- Install required dependencies <br/>
+  ``` npm install ```
+- Run the program <br/>
+  ``` npm run dev ```
+- **(Recommended) ** Watch TypeScript validity/types/error while developing <br/>
+  ``` npm run ts-lint ```
 
-```
-npx create-next-app nextjs-blog --use-npm --example "https://github.com/earvinpiamonte/nextjs-tailwindcss-template"
-```
+### Build Program
+- ``` npm run build ```
 
-## Run development server
+---
+<p align="center">
+  Copyright 2023 - Capstone A10
+</p>
 
-```
-cd nextjs-blog
-```
 
-```
-npm run dev
-```
-
-## Deploy with Vercel
-
-Deploy this template using Vercel:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/earvinpiamonte/nextjs-tailwindcss-template)
-
-## Maintainer
-
-This project is maintained by [Noel Earvin Piamonte](https://www.earvinpiamonte.com).
-
-## Credits
-
-[Deploy button image](https://vercel.com/button) used on this `README.md` is owned by [Vercel](https://vercel.com).
