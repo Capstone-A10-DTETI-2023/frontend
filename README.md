@@ -28,7 +28,7 @@ In this capstone project held by DTETI FT UGM, we, as A-10 team, designed a prot
   ``` npm install ```
 - Run the program <br/>
   ``` npm run dev ```
-- **(Recommended) ** Watch TypeScript validity/types/error while developing <br/>
+- **(Recommended)** Watch TypeScript validity/types/error while developing <br/>
   ``` npm run ts-lint ```
 
 ### Build Program
