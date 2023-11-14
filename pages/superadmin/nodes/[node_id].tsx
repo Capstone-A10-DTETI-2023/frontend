@@ -36,7 +36,6 @@ const NodeDetails = () => {
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
     const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
 
-
     // Function to check cached data
     const generateDropdown = async () => {
         const sensor = getSensorByNodeId(nodeId!)

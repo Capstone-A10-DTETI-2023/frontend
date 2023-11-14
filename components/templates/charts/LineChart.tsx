@@ -31,7 +31,7 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
         xAxis: {
             type: 'category',
             boundaryGap: true,
-            data: data?.sensor_data?.map((item) => `${item.timestamp.split('T')[0]} ${item.timestamp.split('T')[1].slice(0, -1)}`)
+            data: data?.sensor_data?.map((item) => `${item.timestamp.split('T')[0]} ${item.timestamp.split('T')[1].slice(0, -1)}`).reverse()
         },
         yAxis: {
             type: 'value',
@@ -42,15 +42,13 @@ const LineChart = ({ height, width = '100%', name = 'Unnamed', data }: { height:
                 name: name,
                 type: 'line',
                 smooth: true,
-                data: data?.sensor_data?.map((item) => item.value)
+                data: data?.sensor_data?.map((item) => item.value).reverse()
             },
         ],
         tooltip: {
             trigger: 'axis',
         },
     };
-
-
 
     // const [option, setOption] = useState(defaultOption);
 

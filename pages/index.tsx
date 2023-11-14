@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import getConfig from 'next/config';
 
-import Layout from '@/components/layouts/RootLayout';
+import Pusher from 'pusher-js';
 import {
   Alert,
   AlertIcon,
