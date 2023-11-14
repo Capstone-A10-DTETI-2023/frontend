@@ -13,12 +13,13 @@ import getData from '@/services/localStorage/getData';
 import getSensorByNodeId from '@/services/localStorage/getSensorByNodeId';
 import useFetch from '@/hooks/crud/useFetch';
 import date from '@/utils/date';
+import getDatum from '@/services/localStorage/getDatum';
 
 const NodeDetails = () => {
 
     const [node, setNode] = useState<Node | null>(null);
     const router = useRouter();
-    const isLeakage: boolean = true; // Fetch from backend
+    const isLeakage: boolean = false; // Fetch from backend
     const nodeId = router.query.node_id;
 
     // Bar 
@@ -33,7 +34,7 @@ const NodeDetails = () => {
 
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=ASC&limit=10`, { earlyFetch: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
 
 
     // Function to check cached data
@@ -102,6 +103,10 @@ const NodeDetails = () => {
         fetchSensorData();
     }, [selectedSensor])
 
+    const reload = () => {
+        fetchSensorData();
+    }
+
     return (
         <>
             <div className="breadcrumbs mb-6">
@@ -137,7 +142,7 @@ const NodeDetails = () => {
                                 <option value="30">30</option>
                             </Bar.SelectLimit>
                             <div id="bottom-right-content-wrapper">
-                                <Bar.Buttons />
+                                <Bar.Buttons reload={reload} />
                             </div>
                         </div>
                     </div>

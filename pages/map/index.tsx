@@ -16,7 +16,7 @@ import {
 import { MdArrowRight } from "react-icons/md";
 
 import useFetch from "@/hooks/crud/useFetch";
-import { Node } from "@/types/Node";
+import { Node, CheckedNode } from "@/types/Node";
 const MapComponent = dynamic(
     () => { return import("@/components/templates/map/Map") },
     {
@@ -26,7 +26,6 @@ const MapComponent = dynamic(
 );
 import Alert from "@/components/templates/Alert";
 import LoadingPage from "@/components/templates/LoadingPage";
-import { checkCustomRoutes } from "next/dist/lib/load-custom-routes";
 
 const Map = () => {
 
@@ -34,24 +33,18 @@ const Map = () => {
     const { data: nodes, error, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true, earlyFetch: true });
 
     // Checkbox
-    const [checkedNodes, setCheckedNodes] = useState<Array<boolean>>([]);
-    const allChecked = checkedNodes?.every(Boolean)
-    const isIndeterminate = checkedNodes?.some(Boolean)! && !allChecked
-
+    const [checkedNodes, setCheckedNodes] = useState<Array<CheckedNode> | null>(null);
+    const allChecked = checkedNodes?.every((item) => Boolean(item.isChecked));
+    const isIndeterminate = checkedNodes?.some((item) => Boolean(item.isChecked))! && !allChecked;
     useEffect(() => {
         if (nodes.data instanceof Array) {
-            setCheckedNodes(nodes.data.map(() => true));
-        }
+            setCheckedNodes(nodes.data.map((item) => { return { ...item, isChecked: true } }));
+        };
     }, [nodes]);
 
     // Filter Node
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
     const btnRef = useRef<any>();
-    const [filteredNodes, setFilteredNodes] = useState<Array<Node & { isChecked: boolean }> | null>(null);
-    const filterNode = () => {
-
-    }
-
 
     return (
         <>
@@ -77,7 +70,7 @@ const Map = () => {
                                 <div id="filter-node-wrapper" className="flex flex-col gap-2">
                                     <Checkbox
                                         size={'lg'}
-                                        onChange={(e) => setCheckedNodes([...checkedNodes.map(() => e.target.checked)])}
+                                        onChange={(e) => setCheckedNodes([...checkedNodes?.map((item) => { return { ...item, isChecked: e.target.checked } })!])}
                                         isChecked={allChecked}
                                         isIndeterminate={isIndeterminate}
                                     >
@@ -89,10 +82,10 @@ const Map = () => {
                                                 pl={6} mt={1}
                                                 key={node.id}
                                                 size={'lg'}
-                                                isChecked={checkedNodes[i]!}
+                                                isChecked={checkedNodes?.[i].isChecked!}
                                                 onChange={(e) => {
-                                                    const newArr = [...checkedNodes];
-                                                    newArr[i] = e.target.checked;
+                                                    const newArr = [...checkedNodes!];
+                                                    newArr[i].isChecked = e.target.checked;
                                                     setCheckedNodes([...newArr]);
                                                 }}
                                             >
@@ -122,10 +115,10 @@ const Map = () => {
                     {isNodesLoading &&
                         <LoadingPage>Load nodes..</LoadingPage>
                     }
-                    {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && (router.query.lat && router.query.lng ?
-                        <MapComponent nodes={nodes.data} center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
+                    {!!nodes.data && !isNodesLoading && (checkedNodes instanceof Array) && (router.query.lat && router.query.lng ?
+                        <MapComponent nodes={checkedNodes} center={[parseFloat(router.query.lat as string), parseFloat(router.query.lng as string)]} /> // from node's component redirect
                         :
-                        <MapComponent nodes={nodes.data} center={nodes.data[0].coordinate} /> // access to navbar
+                        <MapComponent nodes={checkedNodes} center={checkedNodes[0].coordinate} /> // access to navbar
                     )
                     }
                 </div>

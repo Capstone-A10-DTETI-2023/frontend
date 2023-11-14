@@ -1,34 +1,30 @@
+import { useState } from "react";
 import {
     MapContainer,
     TileLayer,
     Marker,
     Popup,
     ZoomControl,
-    Polyline
+    Polyline,
 } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
-import { Node } from "@/types/Node";
+import { CheckedNode } from "@/types/Node";
 import PopupMap from "@/components/templates/map/PopupMap";
 import useUser from "@/hooks/useUser";
 import { SensorData } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
 import date from "@/utils/date";
+import { useEffect } from "react";
 
 
-const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) => {
+const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<number> }) => {
 
     const { user } = useUser();
     const userRolePath = user?.role_name.toLowerCase();
-
-    // Create connection between nodes
-    const polylineNodes: Array<Node['coordinate']> = nodes?.map((node, i) => {
-        return node?.coordinate;
-    });
-    polylineNodes?.push(nodes[0]?.coordinate);
 
     // Sensor Data
     const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
@@ -42,7 +38,16 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
         pressureNode2.data as SensorData,
         pressureNode3.data as SensorData,
         pressureNode4.data as SensorData
-    ]
+    ];
+
+    // Fix map doenst re-render when nodes changes
+    const [polyline, setPolyline] = useState<(CheckedNode['coordinate'])[] | null>(null);
+    useEffect(() => {
+        // Create connection between nodes
+        // setPolyline([...nodes?.map(node => node?.coordinate), nodes?.[0].coordinate]);
+        setPolyline([...nodes?.filter(node => node.isChecked).map(node => node?.coordinate), nodes?.[0].coordinate]);
+    }, [nodes]);
+
 
     return (
         <>{center &&
@@ -62,22 +67,29 @@ const Map = ({ nodes, center }: { nodes: Array<Node>, center?: Array<number> }) 
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position="bottomright" />
-                <Polyline pathOptions={{ color: 'blue' }} positions={polylineNodes as LatLngExpression[]} />
-                {nodes && nodes?.map((node) =>
-                    <Marker key={node?.id} position={node?.coordinate as LatLngExpression}>
-                        <Popup className="rounded-sm">
-                            <PopupMap.Container>
-                                <PopupMap.Title>{node?.name}</PopupMap.Title>
-                                <PopupMap.Alert>
-                                    <>
-                                        A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
-                                    </>
-                                </PopupMap.Alert>
-                                <PopupMap.Information chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} />
-                                <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
-                            </PopupMap.Container>
-                        </Popup>
-                    </Marker>
+                {polyline &&
+                    <Polyline pathOptions={{ color: 'blue' }} positions={polyline as LatLngExpression[]} />
+                }
+                {nodes && nodes?.map((node) => {
+                    if (node.isChecked) {
+                        return (
+                            <Marker key={node?.id} position={node?.coordinate as LatLngExpression}>
+                                <Popup className="rounded-sm">
+                                    <PopupMap.Container>
+                                        <PopupMap.Title>{node?.name}</PopupMap.Title>
+                                        <PopupMap.Alert>
+                                            <>
+                                                A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
+                                            </>
+                                        </PopupMap.Alert>
+                                        <PopupMap.Information chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} />
+                                        <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
+                                    </PopupMap.Container>
+                                </Popup>
+                            </Marker>
+                        )
+                    }
+                }
                 )}
             </MapContainer>
         }

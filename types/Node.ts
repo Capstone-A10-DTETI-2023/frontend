@@ -7,6 +7,10 @@ export type Node = {
     non_leak_sens: number
 }
 
+export type CheckedNode = Node & {
+    isChecked: boolean
+}
+
 export type NodePayload = {
     name: string,
     Latitude: string,
