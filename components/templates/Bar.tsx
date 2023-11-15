@@ -43,11 +43,6 @@ const SelectDateRange = () => {
     return (
         <>
             <div id="select-date-range" className='w-fit flex gap-2 items-center'>
-                <Button
-                    paddingX={12}
-                    onClick={() => setFrom(date.formatQueryToInput(dateQueryLastWeek))}
-                    _focus={{ outlineColor: 'teal.400' }}>Today</Button>
-                <Divider orientation='vertical' />
                 <div id="select-date-range-wrapper" className='w-fit flex items-center'>
                     <Input
                         id='from-date'

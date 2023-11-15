@@ -67,25 +67,25 @@ const NodeDetails = () => {
         {
             id: 'last-value',
             label: 'Last Value',
-            value: 20,
+            value: parseFloat((sensorData?.data as SensorData)?.sensor_data?.[0].value) ?? 0,
             unit: 'psi'
         },
         {
             id: 'max-value',
             label: 'Max Value',
-            value: 28.2,
+            value: Math.max(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]),
             unit: 'psi'
         },
         {
             id: 'min-value',
             label: 'Min Value',
-            value: 20.1,
+            value: Math.min(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]),
             unit: 'psi'
         },
         {
             id: 'avg-value',
             label: 'Avg Value',
-            value: 23.7,
+            value: parseFloat((((sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)).reduce((a, b) => a + b, 0)) / (sensorData?.data as SensorData)?.sensor_data?.length).toFixed(2)),
             unit: 'psi'
         },
     ]
@@ -147,15 +147,17 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {isSensorDataLoading && <Skeleton height={200} ></Skeleton>}
-                        {!isSensorDataLoading &&
+                        {isSensorDataLoading ?
+                            <Skeleton height={200} ></Skeleton>
+                            :
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
                         }
                     </div>
                 </div>
             </div>
             <div id="sensor-values" className='w-full flex flex-row gap-4'>
-                {sensorStats && sensorStats.map((sensorStat) =>
+                {isSensorDataLoading && <Skeleton height={200} width={'full'}></Skeleton>}
+                {!isSensorDataLoading && sensorStats && sensorStats.map((sensorStat) =>
                     <div key={sensorStat.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
                         <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
                         <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>

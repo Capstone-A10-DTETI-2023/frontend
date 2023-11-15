@@ -68,7 +68,7 @@ const NodeDetails = () => {
         {
             id: 'last-value',
             label: 'Last Value',
-            value: 20,
+            value: parseFloat((sensorData.data as SensorData).sensor_data[0].value),
             unit: 'psi'
         },
         {
@@ -148,19 +148,21 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {isSensorDataLoading && <Skeleton height={200} ></Skeleton>}
-                        {!isSensorDataLoading &&
+                        {isSensorDataLoading ?
+                            <Skeleton height={200} ></Skeleton>
+                            :
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
                         }
+
                     </div>
                 </div>
             </div>
             <div id="sensor-values" className='w-full flex flex-row gap-4'>
                 {sensorStats && sensorStats.map((sensorStat) =>
-                    <div key={sensorStat.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
-                        <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
-                        <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>
-                        <h6 className='font-semibold text-lg' >{sensorStat.label}</h6>
+                    <div key={sensorStat?.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
+                        <p className='font-bold text-teal-600 text-6xl'>{sensorStat?.value}</p>
+                        <p id="unit" className="text-gray-400 mb-2">{sensorStat?.unit}</p>
+                        <h6 className='font-semibold text-lg' >{sensorStat?.label}</h6>
                     </div>
                 )}
             </div>
