@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     MapContainer,
     TileLayer,
@@ -18,7 +18,6 @@ import useUser from "@/hooks/useUser";
 import { SensorData } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
 import date from "@/utils/date";
-import { useEffect } from "react";
 
 
 const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<number> }) => {
@@ -41,11 +40,11 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
     ];
 
     // Fix map doenst re-render when nodes changes
-    const [polyline, setPolyline] = useState<(CheckedNode['coordinate'])[] | null>(null);
+    const [polyline, setPolyline] = useState<(CheckedNode['coordinate'])[]>();
     useEffect(() => {
         // Create connection between nodes
-        // setPolyline([...nodes?.map(node => node?.coordinate), nodes?.[0].coordinate]);
-        setPolyline([...nodes?.filter(node => node.isChecked).map(node => node?.coordinate), nodes?.[0].coordinate]);
+        setPolyline(() => [...nodes?.filter(node => node.isChecked).map(node => node?.coordinate)]);
+        setPolyline((prev) => [...prev ?? [], prev?.[0] ?? []]);
     }, [nodes]);
 
 
@@ -67,7 +66,7 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position="bottomright" />
-                {polyline &&
+                {!!polyline?.length &&
                     <Polyline pathOptions={{ color: 'blue' }} positions={polyline as LatLngExpression[]} />
                 }
                 {nodes && nodes?.map((node) => {

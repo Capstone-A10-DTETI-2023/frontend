@@ -98,9 +98,8 @@ const Map = () => {
 
                             <DrawerFooter>
                                 <Button variant='outline' mr={3} onClick={() => setIsDrawerOpen(false)}>
-                                    Cancel
+                                    Clear
                                 </Button>
-                                <Button colorScheme='blue'>Save</Button>
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
