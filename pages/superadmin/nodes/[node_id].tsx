@@ -32,9 +32,9 @@ const NodeDetails = () => {
 
     const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
 
-    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { fetchData: fetchNodes, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=${selectedLimit}`, { earlyFetch: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=${selectedLimit}`);
 
     // Function to check cached data
     const generateDropdown = async () => {
@@ -97,10 +97,13 @@ const NodeDetails = () => {
         generateNode();
     }, [nodeId]);
 
-    // Fetch sensor data when selectedSensor changes
     useEffect(() => {
-        fetchSensorData();
-    }, [selectedSensor])
+        // Ensure all is not loading because sensor data need async data from sensor and nodes
+        if (selectedSensor || selectedLimit || (!isSensorDataLoading && !isSensorLoading && !isSensorLoading)) {
+            fetchSensorData();
+        }
+    }, [selectedSensor, selectedLimit])
+
 
     const reload = () => {
         fetchSensorData();
@@ -147,7 +150,7 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {isSensorDataLoading ?
+                        {(isSensorDataLoading) ?
                             <Skeleton height={200} ></Skeleton>
                             :
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
@@ -156,14 +159,16 @@ const NodeDetails = () => {
                 </div>
             </div>
             <div id="sensor-values" className='w-full flex flex-row gap-4'>
-                {isSensorDataLoading && <Skeleton height={200} width={'full'}></Skeleton>}
-                {!isSensorDataLoading && sensorStats && sensorStats.map((sensorStat) =>
-                    <div key={sensorStat.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
-                        <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
-                        <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>
-                        <h6 className='font-semibold text-lg' >{sensorStat.label}</h6>
-                    </div>
-                )}
+                {isSensorDataLoading ?
+                    <Skeleton height={200} width={'full'}></Skeleton>
+                    :
+                    sensorStats && sensorStats.map((sensorStat) =>
+                        <div key={sensorStat.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
+                            <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
+                            <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>
+                            <h6 className='font-semibold text-lg' >{sensorStat.label}</h6>
+                        </div>
+                    )}
             </div>
         </>
     );
