@@ -7,24 +7,43 @@ import {
     Tooltip,
     SliderTrack,
     SliderFilledTrack,
-    SliderThumb
+    SliderThumb,
+    useToast
 } from "@chakra-ui/react";
 
-import { Node, NodePayload } from "@/types/Node";
+import { Node } from "@/types/Node";
+import { ActuatorPayload } from "@/types/Actuator";
+import AlertDialog from "@/components/templates/AlertDialog";
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import getData from "@/services/localStorage/getData";
 import getDataById from "@/services/localStorage/getNodeDetail";
 import useFetch from "@/hooks/crud/useFetch";
+import useActuator from "@/hooks/useActuator";
+import ACTUATOR_ACTION from "@/utils/constants/actuatorAction";
 
 const Actuator = () => {
     const [node, setNode] = useState<Node | null>(null);
-    const [isValveActive, setIsValveActive] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { data, error: actuatorError, isLoading: isActuatorLoading, actuatePump } = useActuator();
 
-    const [payload, setPayload] = useState<number>(0);
-    const [randomPayload, setRandomPayload] = useState<number>(payload);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false)
+    const [currentPressure, setCurrentPressure] = useState<number>(0);
+    const [payload, setPayload] = useState<ActuatorPayload>({
+        node_id: "1",
+        actuator_id: "1",
+        action: ACTUATOR_ACTION.off,
+        value: 0
+    });
+    const [showCurrentPressure, setShowCurrentPressure] = useState<boolean>(false);
+    const [showTooltip, setShowTooltip] = useState<boolean>(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+    const handleSetPressure = () => {
+        setPayload({ ...payload, action: ACTUATOR_ACTION.on, value: currentPressure });
+    }
+
+    const handleActuate = async () => {
+        await actuatePump(payload);
+    }
 
     const generateNode = async () => {
         const nodes = getData<Node>('/api/v2/nodes');
@@ -37,32 +56,63 @@ const Actuator = () => {
         }
     };
 
-    const generateRandomPressure = () => {
-        const randomPressure = payload + Math.random() * 1.0;
-        payload === 0 ? setRandomPayload(payload) : setRandomPayload(randomPressure)
-    }
-
-    const handleActivate = () => {
-        setIsLoading(true);
-        setIsValveActive(!isValveActive);
-        setIsLoading(false);
-    }
-
     useEffect(() => {
         // Fetch when localStorage is empty
         generateNode();
     }, []);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            generateRandomPressure();
-        }, 500)
+    // Toast 
+    const toast = useToast();
 
-        return () => clearInterval(timer)
-    })
+    useEffect(() => {
+        if (data?.message === 'success') {
+            toast({
+                title: 'Success!',
+                description: `Set pressure pump pressure to ${payload.value}`,
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+        };
+    }, [data]);
+
+    useEffect(() => {
+        if (payload.action === 'on') {
+            toast({
+                title: 'Info',
+                description: `Pressure pump value changed to ${payload.value}`,
+                status: 'info',
+                duration: 5000,
+                isClosable: true,
+            });
+        };
+    }, [payload]);
+
+    // Random Generate Pressure
+
+    // const [randomPayload, setRandomPayload] = useState<number>(payload);
+    // const generateRandomPressure = () => {
+    //     const randomPressure = payload + Math.random() * 1.0;
+    //     payload === 0 ? setRandomPayload(payload) : setRandomPayload(randomPressure)
+    // }
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         generateRandomPressure();
+    //     }, 500)
+
+    //     return () => clearInterval(timer)
+    // })
 
     return (
         <>
+            <AlertDialog
+                title="Set Pump"
+                description="Are you sure want to set pump? This action can cancelled"
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+                onClick={handleActuate}
+                isLoading={isActuatorLoading}
+            />
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>
@@ -71,21 +121,23 @@ const Actuator = () => {
                 <div id="node-wrapper" className="flex flex-row justify-between items-center">
                     <div id="content-left" className="flex items-center gap-4">
                         <h6 id="node-title" className="font-bold text-lg">{node?.name}</h6>
-                        <Badge colorScheme={(isValveActive || payload === 0) ? 'red' : 'green'} fontSize={12} className="h-fit">{(isValveActive || payload === 0) ? 'Deactivated' : 'Activated'}</Badge>
-                        <p>Current Pressure: <span className="font-bold">{randomPayload.toFixed(2)}</span></p>
+                        <Badge colorScheme={payload.value === 0 ? 'red' : 'green'} fontSize={12} className="h-fit">{payload.value === 0 ? 'Deactivated' : 'Activated'}</Badge>
+                        <p>Current Pressure: <span className="font-bold">{payload.value}</span></p>
                     </div>
                     <div id="content-right" className="flex flex-row gap-4 items-center">
                         <div id="slider" className="w-96 px-4">
                             <Slider
                                 size={'lg'}
                                 aria-label='Slider Leakage'
-                                defaultValue={payload}
+                                defaultValue={currentPressure}
                                 min={0}
                                 max={50}
                                 step={0.01}
-                                onChange={(val) => setPayload(val)}
-                                onMouseEnter={() => setShowTooltip(true)}
-                                onMouseLeave={() => setShowTooltip(false)}
+                                onChange={(val) => {
+                                    setCurrentPressure(val);
+                                }}
+                                onMouseEnter={() => setShowCurrentPressure(true)}
+                                onMouseLeave={() => setShowCurrentPressure(false)}
                             >
                                 <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
                                     0
@@ -104,19 +156,40 @@ const Actuator = () => {
                                     bg='teal.500'
                                     color='white'
                                     placement='top'
-                                    isOpen={showTooltip}
-                                    label={`${payload}`}
+                                    isOpen={showCurrentPressure}
+                                    label={`${currentPressure}`}
                                 >
                                     <SliderThumb boxSize={6} />
                                 </Tooltip>
                             </Slider>
                         </div>
-                        {/* <Button
+                        <Button
                             colorScheme="teal"
                             className="w-fit"
-                            loadingText={isValveActive ? 'Turning off..' : 'Turning on..'}
-                            isLoading={isLoading}
-                            onClick={handleActivate}>{(isValveActive || payload === 0) ? 'Turn On Valve' : 'Turn Off Valve'}</Button> */}
+                            loadingText={'...'}
+                            isLoading={isActuatorLoading}
+                            onClick={handleSetPressure}
+                        >Set Pressure</Button>
+                        <Tooltip
+                            hasArrow
+                            bg='teal.500'
+                            color='white'
+                            placement='top'
+                            isOpen={showTooltip}
+                            label={'If you want to set pump pressure, set the pump pressure first'}
+                        >
+                            <Button
+                                colorScheme="blue"
+                                className="w-fit"
+                                loadingText={'Changing pump state...'}
+                                isLoading={isActuatorLoading}
+                                onClick={() => {
+                                    setIsDialogOpen(true);
+                                }}
+                                onMouseEnter={() => setShowTooltip(true)}
+                                onMouseLeave={() => setShowTooltip(false)}
+                            >Set Pump</Button>
+                        </Tooltip>
                     </div>
                 </div>
             </div>

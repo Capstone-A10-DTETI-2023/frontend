@@ -1,6 +1,9 @@
 import { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } from 'react'
 import { useRouter } from "next/router";
-import { Skeleton } from '@chakra-ui/react';
+import {
+    Skeleton,
+    useToast
+} from '@chakra-ui/react';
 
 import Breadcrumb from "@/components/templates/Breadcrumb";
 import LineChart from '@/components/templates/charts/LineChart';
@@ -33,9 +36,9 @@ const NodeDetails = () => {
     const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
 
 
-    const { fetchData: fetchNodes, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
-    const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${date.formatInputToQuery(from.trim())}&to=${date.formatInputToQuery(to.trim())}&order_by=DESC&limit=${selectedLimit}`);
+    const { fetchData: fetchNodes, isLoading: isNodesLoading, error: nodesError } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+    const { fetchData: fetchSensors, isLoading: isSensorLoading, error: sensorsError } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData, error: sensorDataError } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${date.formatInputToQuery(from.trim())}&to=${date.formatInputToQuery(to.trim())}&order_by=DESC&limit=${selectedLimit}`);
 
     // Function to check cached data
     const generateDropdown = async () => {
@@ -111,10 +114,23 @@ const NodeDetails = () => {
 
     }, [selectedSensor, selectedLimit, to, from])
 
-
     const reload = () => {
         fetchSensorData();
     }
+
+    // Toast
+    const toast = useToast();
+    useEffect(() => {
+        if (nodesError?.message || sensorDataError?.message || sensorsError?.message) {
+            toast({
+                title: 'Error!',
+                description: 'Error fetching data',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [nodesError, sensorDataError, sensorsError]);
 
     return (
         <>

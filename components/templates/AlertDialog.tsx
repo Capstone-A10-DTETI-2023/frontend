@@ -44,7 +44,10 @@ const AlertDialog = ({ title, description, isOpen, setIsOpen, isLoading, onClick
                                     bgColor: 'red.500',
                                     color: 'white'
                                 }}
-                                onClick={onClick}
+                                onClick={() => {
+                                    onClick();
+                                    setIsOpen(false);
+                                }}
                                 ml={3}>
                                 {title}
                             </Button>
