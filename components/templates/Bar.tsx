@@ -34,11 +34,7 @@ const SelectSensor = ({ children, onChange, value }: { children: JSX.Element | J
 }
 
 
-const SelectDateRange = () => {
-
-    const { dateQueryNow, dateQueryLastWeek } = date.getTimestampNow();
-    const [from, setFrom] = useState<string>(date.formatQueryToInput(dateQueryLastWeek));
-    const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
+const SelectDateRange = ({ from, to, setFrom, setTo }: { from: string, to: string, setFrom: (val: string) => void, setTo: (val: string) => void }) => {
 
     return (
         <>
@@ -50,7 +46,7 @@ const SelectDateRange = () => {
                         size="md"
                         type="datetime-local"
                         value={from}
-                        onChange={(e) => console.log(e.target.value)}
+                        onChange={(e) => setFrom(e.target.value)}
                     />
                     <Icon fontSize={36} as={MdArrowRight} />
                     <Input

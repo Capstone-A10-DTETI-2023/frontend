@@ -29,12 +29,12 @@ const getTimestampNow = (): Record<string, string> => {
 
 const formatQueryToInput = (date: string): string => {
     const splittedDate = date.split(' ');
-    return `${splittedDate[0]} ${splittedDate[1].slice(0, -3)}`; // remove :, second, and Z.
+    return `${splittedDate[0]}T${splittedDate[1].slice(0, -3)}`; // remove :, second, and Z.
 }
 
 const formatInputToQuery = (date: string): string => {
     const splittedDate = date.split('T');
-    return `${splittedDate[0]}T${splittedDate[1]}:00`;
+    return `${splittedDate[0]} ${splittedDate[1]}:00`;
 }
 
 export default {

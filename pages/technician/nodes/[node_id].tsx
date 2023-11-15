@@ -29,13 +29,14 @@ const NodeDetails = () => {
     const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
         setState(e.target.value);
     }
-
     const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
+    const [from, setFrom] = useState<string>(date.formatQueryToInput(dateQueryLastWeek));
+    const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
 
-    const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
+
+    const { fetchData: fetchNodes, isLoading: isNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
-
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${date.formatInputToQuery(from.trim())}&to=${date.formatInputToQuery(to.trim())}&order_by=DESC&limit=${selectedLimit}`);
 
     // Function to check cached data
     const generateDropdown = async () => {
@@ -64,29 +65,29 @@ const NodeDetails = () => {
     };
 
 
-    const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
+    const sensorStats: Array<{ id: string, label: string, value: string, unit: string }> = [
         {
             id: 'last-value',
             label: 'Last Value',
-            value: parseFloat((sensorData.data as SensorData).sensor_data[0].value),
+            value: (sensorData?.data as SensorData)?.sensor_data?.[0].value ?? 0,
             unit: 'psi'
         },
         {
             id: 'max-value',
             label: 'Max Value',
-            value: 28.2,
+            value: Math.max(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]).toFixed(2),
             unit: 'psi'
         },
         {
             id: 'min-value',
             label: 'Min Value',
-            value: 20.1,
+            value: Math.min(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]).toFixed(2),
             unit: 'psi'
         },
         {
             id: 'avg-value',
             label: 'Avg Value',
-            value: 23.7,
+            value: ((((sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)).reduce((a, b) => a + b, 0)) / (sensorData?.data as SensorData)?.sensor_data?.length) || 0).toFixed(2),
             unit: 'psi'
         },
     ]
@@ -98,10 +99,14 @@ const NodeDetails = () => {
         generateNode();
     }, [nodeId]);
 
-    // Fetch sensor data when selectedSensor changes
+    // Hooks for select bar
     useEffect(() => {
-        fetchSensorData();
-    }, [selectedSensor])
+        // Ensure all is not loading because sensor data need async data from sensor and nodes
+        if (selectedSensor || selectedLimit || (!isSensorDataLoading && !isSensorLoading && !isSensorLoading)) {
+            fetchSensorData();
+        }
+    }, [selectedSensor, selectedLimit, to, from])
+
 
     const reload = () => {
         fetchSensorData();
@@ -130,7 +135,12 @@ const NodeDetails = () => {
                                 )}
                             </Bar.SelectSensor>
                             <div id="top-right-content-wrapper">
-                                <Bar.SelectDateRange />
+                                <Bar.SelectDateRange
+                                    from={from}
+                                    to={to}
+                                    setFrom={setFrom}
+                                    setTo={setTo}
+                                />
                             </div>
                         </div>
                         <div id="bottom-content-wrapper" className="flex flex-row justify-between w-full mb-4">
@@ -148,23 +158,25 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {isSensorDataLoading ?
+                        {(isSensorDataLoading) ?
                             <Skeleton height={200} ></Skeleton>
                             :
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
                         }
-
                     </div>
                 </div>
             </div>
             <div id="sensor-values" className='w-full flex flex-row gap-4'>
-                {sensorStats && sensorStats.map((sensorStat) =>
-                    <div key={sensorStat?.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
-                        <p className='font-bold text-teal-600 text-6xl'>{sensorStat?.value}</p>
-                        <p id="unit" className="text-gray-400 mb-2">{sensorStat?.unit}</p>
-                        <h6 className='font-semibold text-lg' >{sensorStat?.label}</h6>
-                    </div>
-                )}
+                {isSensorDataLoading ?
+                    <Skeleton height={200} width={'full'}></Skeleton>
+                    :
+                    sensorStats && sensorStats.map((sensorStat) =>
+                        <div key={sensorStat.id} id="last-value" className='flex-1 bg-white outline outline-1 outline-gray-200 shadow-md p-6 flex flex-col justify-center items-center rounded-md'>
+                            <p className='font-bold text-teal-600 text-6xl'>{sensorStat.value}</p>
+                            <p id="unit" className="text-gray-400 mb-2">{sensorStat.unit}</p>
+                            <h6 className='font-semibold text-lg' >{sensorStat.label}</h6>
+                        </div>
+                    )}
             </div>
         </>
     );
