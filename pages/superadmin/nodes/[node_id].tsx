@@ -34,7 +34,7 @@ const NodeDetails = () => {
 
     const { fetchData: fetchNodes, isLoading: IsNodesLoading } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
-    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
+    const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=${selectedLimit}`, { earlyFetch: true });
 
     // Function to check cached data
     const generateDropdown = async () => {
@@ -63,29 +63,29 @@ const NodeDetails = () => {
     };
 
 
-    const sensorStats: Array<{ id: string, label: string, value: number, unit: string }> = [
+    const sensorStats: Array<{ id: string, label: string, value: string, unit: string }> = [
         {
             id: 'last-value',
             label: 'Last Value',
-            value: parseFloat((sensorData?.data as SensorData)?.sensor_data?.[0].value) ?? 0,
+            value: (sensorData?.data as SensorData)?.sensor_data?.[0].value ?? 0,
             unit: 'psi'
         },
         {
             id: 'max-value',
             label: 'Max Value',
-            value: Math.max(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]),
+            value: Math.max(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]).toFixed(2),
             unit: 'psi'
         },
         {
             id: 'min-value',
             label: 'Min Value',
-            value: Math.min(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]),
+            value: Math.min(...(sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)) ?? [0]).toFixed(2),
             unit: 'psi'
         },
         {
             id: 'avg-value',
             label: 'Avg Value',
-            value: parseFloat((((sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)).reduce((a, b) => a + b, 0)) / (sensorData?.data as SensorData)?.sensor_data?.length).toFixed(2)),
+            value: ((((sensorData?.data as SensorData)?.sensor_data?.map(data => parseFloat(data.value)).reduce((a, b) => a + b, 0)) / (sensorData?.data as SensorData)?.sensor_data?.length) || 0).toFixed(2),
             unit: 'psi'
         },
     ]
