@@ -5,12 +5,13 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 
+import useFetch from '@/hooks/crud/useFetch';
+import useSearch from '@/hooks/useSearch';
 import Node from '@/components/templates/Node';
 import LoadingPage from '@/components/templates/LoadingPage';
 import Alert from '@/components/templates/Alert';
 import Breadcrumb from '@/components/templates/Breadcrumb';
 import Search from '@/components/templates/Search';
-import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
 import { SensorData } from '@/types/Sensor';
 import date from '@/utils/date';
@@ -55,6 +56,8 @@ const AdminNodes = () => {
         }
     }, [nodeError, pressureNode1Error, pressureNode2Error, pressureNode3Error, pressureNode4Error])
 
+    // Search
+    const { searchText, setSearchText, filteredData: filteredNodes, filter } = useSearch<any>(nodes?.data);
 
     return (
         <>
@@ -62,13 +65,19 @@ const AdminNodes = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Pipe Node Unit (PNU)</h3>
-            <Search placeholder='Search your node here..' />
+            <Search
+                searchText={searchText}
+                setSearchText={setSearchText}
+                filter={filter}
+                placeholder='Search node here..'
+            />
             <div id="nodes" className="flex flex-col gap-4">
                 {!!nodeError?.message && <Alert.Error>{nodeError.message}</Alert.Error>}
                 {(pressureNode1Error?.message || pressureNode2Error?.message || pressureNode3Error?.message || pressureNode4Error?.message) && <Alert.Error>{'Error when fetching sensor data'}</Alert.Error>}
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}
                 {isNodesLoading && <LoadingPage>Load nodes..</LoadingPage>}
-                {!!nodes.data && !isNodesLoading && (nodes.data instanceof Array) && nodes.data.map((node, i) =>
+                {(filteredNodes instanceof Array) && !filteredNodes.length && <>{searchText} is not found</>}
+                {!!nodes.data && !isNodesLoading && (filteredNodes instanceof Array) && filteredNodes?.map((node, i) =>
                     <Node.Container key={node.id} variant={node.id !== 1 ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
                         {(isPressureNode1Loading || isPressureNode2Loading || isPressureNode3Loading || isPressureNode4Loading) ?

@@ -24,6 +24,7 @@ import { Sensor } from "@/types/Sensor";
 import { SensorPayload } from '@/types/Sensor';
 import useFetch from "@/hooks/crud/useFetch";
 import useRemove from '@/hooks/crud/useRemove';
+import useSearch from '@/hooks/useSearch';
 
 const AdminSensors = () => {
 
@@ -86,6 +87,9 @@ const AdminSensors = () => {
         }
     }, [removeMessage]);
 
+    // Search
+    const { searchText, setSearchText, filteredData: filteredSensors, filter } = useSearch<any>(sensors?.data);
+
     return (
         <>
             <AlertDialog
@@ -96,7 +100,7 @@ const AdminSensors = () => {
                 onClick={handleRemove}
                 isLoading={isRemoveLoading}
             />
-            <div id="fab-add-node" className='fixed right-24 bottom-20 z-10'>
+            <div id="fab-add-sensor" className='fixed right-24 bottom-20 z-10'>
                 <Button
                     size={'lg'}
                     variant='solid'
@@ -106,7 +110,7 @@ const AdminSensors = () => {
                     leftIcon={<MdAdd />}
                     className='shadow-xl rounded-full'
                     onClick={() => setIsModalCreateOpen(true)}
-                >Add Node</Button>
+                >Add Sensor</Button>
             </div>
             <AddSensorModal
                 isOpen={isModalCreateOpen}
@@ -120,10 +124,19 @@ const AdminSensors = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Sensors</h3>
-            <Search placeholder='Search node sensor here..' />
+            <Search
+                searchText={searchText}
+                setSearchText={setSearchText}
+                filter={filter}
+                placeholder='Search sensor here..'
+            />
+
+            {!isSensorLoading && !sensors.data && <>You have no sensors</>}
             {!!fetchError?.message && <Alert.Error>{fetchError.message}</Alert.Error>}
             {!!removeError?.message && <Alert.Error>{removeError.message}</Alert.Error>}
-            {!isSensorLoading && !sensors.data && <>You have no sensors</>}
+            {(filteredSensors instanceof Array) && !filteredSensors.length && <>{searchText} is not found</>}
+
+
             <div id="sensor-table-wrapper" className='rounded-lg outline outline-1 outline-gray-200 shadow'>
                 <TableContainer>
                     <Table size='md' variant={'striped'} colorScheme='gray'>
@@ -151,7 +164,7 @@ const AdminSensors = () => {
                                     )}
                                 </Tr>
                             }
-                            {!isSensorLoading && (sensors.data instanceof Array) && sensors.data.map((sensor) =>
+                            {!isSensorLoading && (filteredSensors instanceof Array) && filteredSensors.map((sensor) =>
                                 <Tr key={sensor?.id}>
                                     <Td>{sensor?.id}</Td>
                                     <Td>{sensor?.node_id}</Td>

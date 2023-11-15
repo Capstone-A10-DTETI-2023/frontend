@@ -20,10 +20,11 @@ import AddUserModal from "@/components/templates/superadmin/manage-user/AddUserM
 import Search from "@/components/templates/Search";
 import Alert from "@/components/templates/Alert";
 import AlertDialog from "@/components/templates/AlertDialog";
+import EditUserModal from "@/components/templates/superadmin/manage-user/EditUserModal";
 
+import useSearch from "@/hooks/useSearch";
 import useFetch from "@/hooks/crud/useFetch";
 import useRemove from "@/hooks/crud/useRemove";
-import EditUserModal from "@/components/templates/superadmin/manage-user/EditUserModal";
 
 const ManageUser = () => {
 
@@ -86,6 +87,9 @@ const ManageUser = () => {
         }
     }, [removeMessage]);
 
+    // Searching
+    const { searchText, setSearchText, filteredData: filteredUsers, filter } = useSearch<any>(users?.data);
+
     return (
         <>
             <AlertDialog
@@ -120,8 +124,17 @@ const ManageUser = () => {
                 <Breadcrumb />
             </div>
             <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage User</h3>
-            <Search placeholder="Search user here.." />
+            <Search
+                searchText={searchText}
+                setSearchText={setSearchText}
+                filter={filter}
+                placeholder='Search user here..'
+            />
+
+            {!isLoading && !users.data && <>You have no users</>}
             {!!fetchError?.message && <Alert.Error>{fetchError.message}</Alert.Error>}
+            {(filteredUsers instanceof Array) && !filteredUsers.length && <>{searchText} is not found</>}
+
             <div id="user-table-wrapper" className='rounded-lg outline outline-1 outline-gray-200 shadow'>
                 <TableContainer>
                     <Table size='md' variant={'striped'} colorScheme='gray'>
@@ -146,7 +159,7 @@ const ManageUser = () => {
                                     )}
                                 </Tr>
                             }
-                            {!isLoading && users.data instanceof Array && users.data.map((user) =>
+                            {!!users.data && !isLoading && (filteredUsers instanceof Array) && filteredUsers?.map((user) =>
                                 <Tr key={user.id}>
                                     <Td>{user.id}</Td>
                                     <Td>{user.role_id}</Td>

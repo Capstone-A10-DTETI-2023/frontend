@@ -18,7 +18,21 @@ const Home = () => {
     const body = document?.querySelector('body') as HTMLBodyElement;
     body?.classList.toggle('dark');
     body?.classList.contains('dark') ? setText('Light Mode') : setText('Dark Mode');
-  }
+  };
+
+  // WebSocket
+  const [data, setData] = useState<any>();
+  const pusher = new Pusher("916a2c79fe58f5ae3225", {
+    cluster: "ap1",
+  });
+
+  useEffect(() => {
+    console.log(123);
+    const channel = pusher.subscribe('sensordata');
+    channel.bind('new-sensor-data', (data: any) => {
+      console.log(data);
+    })
+  }, [data])
 
   return (
     <section className="h-screen flex items-center bg-white dark:bg-gray-800 transition-all">
