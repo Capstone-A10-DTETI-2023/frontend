@@ -3,6 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import ProtectedRouteProvider from "@/components/layouts/ProtectedRouteProvider";
 import RootLayout from "@/components/layouts/RootLayout";
 import PROTECTED_ROUTES from "utils/constants/protectedRoutes";
+import PusherContextProvider from "@/services/pusher/PusherContextProvider";
 
 import { Nunito } from 'next/font/google';
 const nunito = Nunito({
@@ -17,14 +18,16 @@ import "@/styles/global.css";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <main className={nunito.className}>
-      <ProtectedRouteProvider protectedRoutes={PROTECTED_ROUTES}>
-        <ChakraProvider>
-          <RootLayout>
-            <Component {...pageProps} />
-          </RootLayout>
-        </ChakraProvider>
-      </ProtectedRouteProvider>
-    </main>
+      <PusherContextProvider>
+        <ProtectedRouteProvider protectedRoutes={PROTECTED_ROUTES}>
+          <ChakraProvider>
+            <RootLayout>
+              <Component {...pageProps} />
+            </RootLayout>
+          </ChakraProvider>
+        </ProtectedRouteProvider>
+      </PusherContextProvider>
+    </main >
   )
 };
 

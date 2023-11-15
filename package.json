@@ -16,7 +16,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ts-lint": "tsc --noEmit --incremental --watch"
+    "ts-lint": "tsc --noEmit --incremental --watch",
+    "loc": "git ls-files | xargs wc -l"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
