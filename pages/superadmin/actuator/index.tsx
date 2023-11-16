@@ -123,7 +123,7 @@ const Actuator = () => {
                         <h6 id="node-title" className="font-bold text-lg">{node?.name}</h6>
                         <Badge colorScheme={payload.value === 0 ? 'red' : 'green'} fontSize={12} className="h-fit">{payload.value === 0 ? 'Deactivated' : 'Activated'}</Badge>
                         <div id="pressures" className="flex flex-col gap-1">
-                            <p>Current Pressure: <span className="font-bold">{payload.value}</span></p>
+                            <p>Current Pressure Setting: <span className="font-bold">{payload.value}</span></p>
                             {/* <p>Actual Pressure: <span className="font-bold">{randomPayload.toFixed(2)}</span></p> */}
                         </div>
                     </div>
