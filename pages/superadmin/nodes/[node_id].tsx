@@ -29,7 +29,6 @@ const NodeDetails = () => {
         non_leak_sens: 0
     });
     const router = useRouter();
-    const isLeakage: boolean = false; // Fetch from backend
     const nodeId = router.query.node_id;
 
     // Bar 
@@ -201,6 +200,8 @@ const NodeDetails = () => {
                                 <option value="10">10</option>
                                 <option value="15">15</option>
                                 <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
                             </Bar.SelectLimit>
                             <div id="bottom-right-content-wrapper">
                                 <Bar.Buttons reload={reload} />

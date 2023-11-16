@@ -126,23 +126,19 @@ const AdminNodes = () => {
                 {!!nodes.data && !isNodesLoading && (filteredNodes instanceof Array) && filteredNodes?.map((node, i) =>
                     <Node.Container key={node.id} variant={node.id !== leakageNode.id ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
-                        {(isPressureNode1Loading || isPressureNode2Loading || isPressureNode3Loading || isPressureNode4Loading) ?
-                            <LoadingPage>Load sensor data...</LoadingPage>
-                            :
-                            <Node.Body chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} >
-                                <div className="flex-col flex gap-2">
-                                    <div id="lat-lng">
-                                        <p>Latitude: {Number(node.coordinate[0]).toFixed(3)}</p>
-                                        <p>Latitude: {Number(node.coordinate[1]).toFixed(3)}</p>
-                                    </div>
-                                    <Button>
-                                        <Link href={`/map?lat=${node.coordinate[0]}&lng=${node.coordinate[1]}`}>
-                                            See on Map
-                                        </Link>
-                                    </Button>
+                        <Node.Body chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} >
+                            <div className="flex-col flex gap-2">
+                                <div id="lat-lng">
+                                    <p>Latitude: {Number(node.coordinate[0]).toFixed(3)}</p>
+                                    <p>Latitude: {Number(node.coordinate[1]).toFixed(3)}</p>
                                 </div>
-                            </Node.Body>
-                        }
+                                <Button>
+                                    <Link href={`/map?lat=${node.coordinate[0]}&lng=${node.coordinate[1]}`}>
+                                        See on Map
+                                    </Link>
+                                </Button>
+                            </div>
+                        </Node.Body>
                         <Node.Button href={`/superadmin/nodes/${node.id}`} />
                     </Node.Container>
                 )}

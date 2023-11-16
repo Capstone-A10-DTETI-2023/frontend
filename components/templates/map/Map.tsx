@@ -17,6 +17,7 @@ import PopupMap from "@/components/templates/map/PopupMap";
 import useUser from "@/hooks/useUser";
 import { SensorData } from "@/types/Sensor";
 import useFetch from "@/hooks/crud/useFetch";
+import { usePusherContext } from "@/services/pusher/usePusherContext";
 import date from "@/utils/date";
 
 
@@ -47,7 +48,9 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
         setPolyline((prev) => [...prev ?? [], prev?.[0] ?? []]);
     }, [nodes]);
 
-
+    // Websocket
+    const { leakageNode } = usePusherContext();
+    
     return (
         <>{center &&
             <MapContainer
@@ -76,11 +79,13 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
                                 <Popup className="rounded-sm">
                                     <PopupMap.Container>
                                         <PopupMap.Title>{node?.name}</PopupMap.Title>
-                                        {/* <PopupMap.Alert>
-                                            <>
-                                                A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
-                                            </>
-                                        </PopupMap.Alert> */}
+                                        {(node.id === leakageNode.id) &&
+                                            <PopupMap.Alert>
+                                                <>
+                                                    A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
+                                                </>
+                                            </PopupMap.Alert>
+                                        }
                                         <PopupMap.Information chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} />
                                         <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
                                     </PopupMap.Container>

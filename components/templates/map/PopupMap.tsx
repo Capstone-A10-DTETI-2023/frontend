@@ -12,7 +12,7 @@ import { SensorData } from '@/types/Sensor';
 
 import LineChart from '@/components/templates/charts/LineChart';
 
-const Container = ({ children }: { children: JSX.Element | Array<JSX.Element> }) => {
+const Container = ({ children }: { children: JSX.Element | Array<JSX.Element> | any }) => {
     return (
         <>
             <div id='popup-map-container' className="flex flex-col space-y-4 min-w-fit w-72">
