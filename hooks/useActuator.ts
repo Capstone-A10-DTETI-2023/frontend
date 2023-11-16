@@ -6,27 +6,20 @@ import { FetchResponse } from "@/types/Api";
 import fetcher from "@/services/fetcher";
 
 const useActuator = () => {
-    const [data, setData] = useState<{ message: string } | null>(null);
+    const [data, setData] = useState<{ lastPressureValue: string, message: string } | null>(null);
     const [error, setError] = useState<FetchResponse<Actuator>['error']>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const delay = async (ms: number) => {
-        await new Promise((res) => {
-            setTimeout(res, ms);
-        });
-    };
 
     const actuatePump = async (payload: ActuatorPayload) => {
         setIsLoading(true);
         try {
-            await delay(1000);
-            await console.log(payload);
-            await setData({ message: 'success' });
-            // await fetcher.post('/api/v2/tsdata/actuator', payload);
+            await fetcher.post('/api/v2/tsdata/actuator', payload);
+            const response = await fetcher.get('/api/v2/tsdata/actuator/last?node_id=1&actuator_id=2');
+            await setData({ lastPressureValue: response?.data?.data.value as string, message: 'success' });
         }
         catch (error: AxiosError | any) {
             setError({ status: error?.response?.status, message: error?.response?.data });
-            console.log(error.message);
+            console.log(error);
         }
         finally {
             setIsLoading(false);

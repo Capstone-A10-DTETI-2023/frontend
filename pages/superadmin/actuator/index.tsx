@@ -29,16 +29,21 @@ const Actuator = () => {
     const [currentPressure, setCurrentPressure] = useState<number>(0);
     const [payload, setPayload] = useState<ActuatorPayload>({
         node_id: "1",
-        actuator_id: "1",
+        actuator_id: "2",
         action: ACTUATOR_ACTION.off,
-        value: 0
+        value: '0'
     });
     const [showCurrentPressure, setShowCurrentPressure] = useState<boolean>(false);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
     const handleSetPressure = () => {
-        setPayload({ ...payload, action: ACTUATOR_ACTION.on, value: currentPressure });
+        if (currentPressure === 0) {
+            setPayload({ ...payload, action: ACTUATOR_ACTION.off, value: currentPressure.toFixed(2) });
+        }
+        else {
+            setPayload({ ...payload, action: ACTUATOR_ACTION.on, value: currentPressure.toFixed(2) });
+        }
     }
 
     const handleActuate = async () => {
@@ -90,10 +95,10 @@ const Actuator = () => {
 
 
     // Generat Random Actual Pressure
-    const [randomPayload, setRandomPayload] = useState<number>(payload.value);
+    const [randomPayload, setRandomPayload] = useState<number>(parseFloat(payload.value));
     const generateRandomPressure = () => {
         const randomPressure = payload.value + Math.random() * 1.0;
-        payload.value === 0 ? setRandomPayload(payload.value) : setRandomPayload(randomPressure)
+        parseFloat(payload.value) === 0 ? setRandomPayload(parseFloat(payload.value)) : setRandomPayload(parseFloat(randomPressure))
     }
     useEffect(() => {
         const timer = setInterval(() => {
@@ -121,10 +126,10 @@ const Actuator = () => {
                 <div id="node-wrapper" className="flex flex-row justify-between items-center">
                     <div id="content-left" className="flex items-center gap-4">
                         <h6 id="node-title" className="font-bold text-lg">{node?.name}</h6>
-                        <Badge colorScheme={payload.value === 0 ? 'red' : 'green'} fontSize={12} className="h-fit">{payload.value === 0 ? 'Deactivated' : 'Activated'}</Badge>
+                        <Badge colorScheme={parseFloat(data?.lastPressureValue!) === 0 ? 'red' : 'green'} fontSize={12} className="h-fit">{parseFloat(data?.lastPressureValue!) === 0 ? 'Deactivated' : 'Activated'}</Badge>
                         <div id="pressures" className="flex flex-col gap-1">
-                            <p>Current Pressure Setting: <span className="font-bold">{payload.value}</span></p>
-                            {/* <p>Actual Pressure: <span className="font-bold">{randomPayload.toFixed(2)}</span></p> */}
+                            <p>Current Pressure Setting: <span className="font-bold">{parseFloat(payload.value).toFixed(2)}</span></p>
+                            <p>Last Actual Pressure: <span className="font-bold">{data?.lastPressureValue ?? 0}</span></p>
                         </div>
                     </div>
                     <div id="content-right" className="flex flex-row gap-4 items-center">
