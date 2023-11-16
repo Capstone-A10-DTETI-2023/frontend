@@ -11,21 +11,42 @@ import Alert from '@/components/templates/Alert';
 import Bar from '@/components/templates/Bar';
 import getDataById from '@/services/localStorage/getNodeDetail';
 import { Node } from '@/types/Node';
-import { Sensor, SensorData } from '@/types/Sensor';
+import { Sensor, SensorData, SensorDataPayload } from '@/types/Sensor';
 import getData from '@/services/localStorage/getData';
 import getSensorByNodeId from '@/services/localStorage/getSensorByNodeId';
 import useFetch from '@/hooks/crud/useFetch';
 import date from '@/utils/date';
+import { usePusherContext } from '@/services/pusher/usePusherContext';
 
 const NodeDetails = () => {
 
-    const [node, setNode] = useState<Node | null>(null);
+    const [node, setNode] = useState<Node>({
+        id: -1,
+        coordinate: [0, 0],
+        name: '-',
+        calc_leakage: false,
+        leakage_sens: 0,
+        non_leak_sens: 0
+    });
     const router = useRouter();
     const isLeakage: boolean = false; // Fetch from backend
     const nodeId = router.query.node_id;
 
     // Bar 
-    const [sensors, setSensors] = useState<Array<Sensor>>([]);
+    const [sensors, setSensors] = useState<Array<Sensor>>([
+        {
+            id: -1,
+            node_id: -1,
+            name: '-',
+            unit: '-',
+            interval: 0,
+            tolerance: 0,
+            alarm: false,
+            alarm_type: -1,
+            alarm_low: 0,
+            alarm_high: 0,
+        }
+    ]);
     const [selectedSensor, setSelectedSensor] = useState<number>(0);
     const [selectedLimit, setSelectedLimit] = useState<number>(10);
     const handleSelect = (e: ChangeEvent<HTMLSelectElement>, setState: Dispatch<SetStateAction<any>>) => {
@@ -36,6 +57,7 @@ const NodeDetails = () => {
     const [to, setTo] = useState<string>(date.formatQueryToInput(dateQueryNow));
 
 
+    // Fetch Sensor Data
     const { fetchData: fetchNodes, isLoading: isNodesLoading, error: nodesError } = useFetch<Node>('/api/v2/nodes', { useLocalStorage: true });
     const { fetchData: fetchSensors, isLoading: isSensorLoading, error: sensorsError } = useFetch<Sensor>('/api/v2/sensors', { useLocalStorage: true });
     const { data: sensorData, isLoading: isSensorDataLoading, fetchData: fetchSensorData, error: sensorDataError } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=${nodeId}&sensor_id=${selectedSensor}&from=${date.formatInputToQuery(from.trim())}&to=${date.formatInputToQuery(to.trim())}&order_by=DESC&limit=${selectedLimit}`);
@@ -118,6 +140,15 @@ const NodeDetails = () => {
         fetchSensorData();
     }
 
+    // Websocket
+    const { leakageNode } = usePusherContext();
+    const [newSensorData, setNewSensorData] = useState<SensorDataPayload>({
+        timestamp: '',
+        node_id: '-1',
+        sensor_id: '-1',
+        value: '0'
+    });
+
     // Toast
     const toast = useToast();
     useEffect(() => {
@@ -139,9 +170,9 @@ const NodeDetails = () => {
             </div>
             <h3 id='node-details-title' className="font-semibold text-3xl text-sky-700 mb-6">PNU <span className='font-bold'>{node?.name || <Skeleton className='w-fit inline-block ml-2' ><p>Node 1 DTETI</p></Skeleton>}</span></h3>
             <div id="alert-leakage" className='mb-6'>
-                {isLeakage &&
+                {parseInt(nodeId?.toString()!) === leakageNode.id &&
                     <Alert.LeakageDetected>
-                        {`A leakage on ${node?.name} detected around 10.03 GMT+7, 11/09/2023`}
+                        {`A leakage on ${node?.name} detected around ${dateQueryNow}`}
                     </Alert.LeakageDetected>
                 }
             </div>
@@ -178,7 +209,7 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {(isSensorDataLoading) ?
+                        {!(sensorData.data as SensorData)?.sensor_data ?
                             <Skeleton height={200} ></Skeleton>
                             :
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />

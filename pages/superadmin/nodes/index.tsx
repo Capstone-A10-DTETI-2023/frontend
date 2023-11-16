@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
     useToast,
     Button,
-    Skeleton
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import Link from 'next/link';
@@ -15,9 +14,11 @@ import AddNodeModal from '@/components/templates/superadmin/nodes/AddNodeModal';
 import Search from '@/components/templates/Search';
 import useFetch from '@/hooks/crud/useFetch';
 import { Node as NodeType } from '@/types/Node';
-import { SensorData } from '@/types/Sensor';
+import { SensorData, SensorDataPayload } from '@/types/Sensor';
 import date from '@/utils/date';
 import useSearch from '@/hooks/useSearch';
+import { usePusherContext } from '@/services/pusher/usePusherContext';
+
 
 const AdminNodes = () => {
 
@@ -31,12 +32,27 @@ const AdminNodes = () => {
     const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
     const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
 
-    const sensorData = [
+    // const sensorData = [
+    //     pressureNode1.data as SensorData,
+    //     pressureNode2.data as SensorData,
+    //     pressureNode3.data as SensorData,
+    //     pressureNode4.data as SensorData
+    // ];
+    const [sensorData, setSensorData] = useState<SensorData[]>([
         pressureNode1.data as SensorData,
         pressureNode2.data as SensorData,
         pressureNode3.data as SensorData,
         pressureNode4.data as SensorData
-    ]
+    ]);
+
+    useEffect(() => {
+        setSensorData([
+            pressureNode1.data as SensorData,
+            pressureNode2.data as SensorData,
+            pressureNode3.data as SensorData,
+            pressureNode4.data as SensorData
+        ])
+    }, [pressureNode1, pressureNode2, pressureNode3, pressureNode4])
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -55,14 +71,26 @@ const AdminNodes = () => {
                 title: 'Error!',
                 description: 'Error when fetching sensor data',
                 status: 'error',
-                duration: 5000,
+                duration: 10000,
                 isClosable: true,
             })
         }
+
+
+
     }, [nodeError, pressureNode1Error, pressureNode2Error, pressureNode3Error, pressureNode4Error]);
 
     // Search
     const { searchText, setSearchText, filteredData: filteredNodes, filter } = useSearch<any>(nodes?.data);
+
+    // Websocket
+    const { leakageNode } = usePusherContext();
+    const [newSensorData, setNewSensorData] = useState<SensorDataPayload>({
+        timestamp: '',
+        node_id: '-1',
+        sensor_id: '-1',
+        value: '0'
+    });
 
     return (
         <>
@@ -96,7 +124,7 @@ const AdminNodes = () => {
                 {!isNodesLoading && !nodes.data && <>You have no nodes</>}
                 {(filteredNodes instanceof Array) && !filteredNodes.length && <>{searchText} is not found</>}
                 {!!nodes.data && !isNodesLoading && (filteredNodes instanceof Array) && filteredNodes?.map((node, i) =>
-                    <Node.Container key={node.id} variant={node.id !== 6 ? 'normal' : 'warning'}>
+                    <Node.Container key={node.id} variant={node.id !== leakageNode.id ? 'normal' : 'warning'}>
                         <Node.Title>{node.name}</Node.Title>
                         {(isPressureNode1Loading || isPressureNode2Loading || isPressureNode3Loading || isPressureNode4Loading) ?
                             <LoadingPage>Load sensor data...</LoadingPage>
