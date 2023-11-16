@@ -8,7 +8,6 @@ const cluster = "ap1"
 const pusher = new Pusher(key, {
     cluster: cluster,
 });
-const { dateQueryNow } = date.getTimestampNow()
 
 export const PusherContext = createContext({ pusher, key, leakageNode: { id: 1 } });
 
@@ -18,19 +17,17 @@ type LatestLeakageNode = {
 }
 
 const PusherContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-
-    const [leakageNode, setLeakageNode] = useState<{ id: number }>({ id: -1 });
+    
+    const [leakageNode, setLeakageNode] = useState<LatestLeakageNode>({ id: -1, timestamps: '-' });
     const toast = useToast();
     useEffect(() => {
+        const { dateQueryNow } = date.getTimestampNow();
+
         const channelLeakage = pusher.subscribe('my-channel');
         channelLeakage.bind('leakage', (data: { node_leak: string }) => {
-            setLeakageNode({ id: parseInt(data.node_leak) });
-            sessionStorage.setItem('latestLeakageNode', JSON.stringify({ ...leakageNode, timestamps: dateQueryNow }));
+            setLeakageNode({ id: parseInt(data.node_leak), timestamps: dateQueryNow });
+            sessionStorage.setItem('latestLeakageNode', JSON.stringify({ ...leakageNode }));
         });
-
-        if (leakageNode.id === -1 && (JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode).id) {
-            setLeakageNode(JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode);
-        }
 
         // Toast if leakaged
         if (leakageNode.id !== -1) {
@@ -38,12 +35,17 @@ const PusherContextProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 title: 'Leakage!',
                 description: `Latest leakage detected on node id: ${leakageNode.id} at ${dateQueryNow}`,
                 status: 'error',
-                duration: 10000,
+                duration: 20000, // 45 s
                 isClosable: true,
             })
         };
 
-        // return () => { pusher.unsubscribe(key) }
+        // if (leakageNode?.id === -1 && (JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode)?.id) {
+        //     setLeakageNode(JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode);
+        // }
+
+        return () => { pusher.unsubscribe(key) }
+
     }, [leakageNode]);
 
     return (

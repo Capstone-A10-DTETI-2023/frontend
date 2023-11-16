@@ -88,20 +88,20 @@ const Actuator = () => {
         };
     }, [payload]);
 
-    // Random Generate Pressure
 
-    // const [randomPayload, setRandomPayload] = useState<number>(payload);
-    // const generateRandomPressure = () => {
-    //     const randomPressure = payload + Math.random() * 1.0;
-    //     payload === 0 ? setRandomPayload(payload) : setRandomPayload(randomPressure)
-    // }
-    // useEffect(() => {
-    //     const timer = setInterval(() => {
-    //         generateRandomPressure();
-    //     }, 500)
+    // Generat Random Actual Pressure
+    const [randomPayload, setRandomPayload] = useState<number>(payload.value);
+    const generateRandomPressure = () => {
+        const randomPressure = payload.value + Math.random() * 1.0;
+        payload.value === 0 ? setRandomPayload(payload.value) : setRandomPayload(randomPressure)
+    }
+    useEffect(() => {
+        const timer = setInterval(() => {
+            generateRandomPressure();
+        }, 1000)
 
-    //     return () => clearInterval(timer)
-    // })
+        return () => clearInterval(timer)
+    })
 
     return (
         <>
@@ -122,7 +122,10 @@ const Actuator = () => {
                     <div id="content-left" className="flex items-center gap-4">
                         <h6 id="node-title" className="font-bold text-lg">{node?.name}</h6>
                         <Badge colorScheme={payload.value === 0 ? 'red' : 'green'} fontSize={12} className="h-fit">{payload.value === 0 ? 'Deactivated' : 'Activated'}</Badge>
-                        <p>Current Pressure: <span className="font-bold">{payload.value}</span></p>
+                        <div id="pressures" className="flex flex-col gap-1">
+                            <p>Current Pressure: <span className="font-bold">{payload.value}</span></p>
+                            {/* <p>Actual Pressure: <span className="font-bold">{randomPayload.toFixed(2)}</span></p> */}
+                        </div>
                     </div>
                     <div id="content-right" className="flex flex-row gap-4 items-center">
                         <div id="slider" className="w-96 px-4">
