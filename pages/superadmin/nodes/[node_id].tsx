@@ -210,11 +210,11 @@ const NodeDetails = () => {
                     </div>
 
                     <div id="chart">
-                        {!(sensorData.data as SensorData)?.sensor_data ?
-                            <Skeleton height={200} ></Skeleton>
-                            :
+                        {/* {!(sensorData.data as SensorData)?.sensor_data ? */}
+                            {/* <Skeleton height={200} ></Skeleton> */}
+                            {/* : */}
                             <LineChart height={200} name='Pressure' data={sensorData.data as SensorData} />
-                        }
+                        {/* } */}
                     </div>
                 </div>
             </div>
