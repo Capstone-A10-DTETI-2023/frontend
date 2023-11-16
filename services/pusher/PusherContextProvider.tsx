@@ -17,17 +17,39 @@ type LatestLeakageNode = {
 }
 
 const PusherContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    
+
     const [leakageNode, setLeakageNode] = useState<LatestLeakageNode>({ id: -1, timestamps: '-' });
     const toast = useToast();
     useEffect(() => {
         const { dateQueryNow } = date.getTimestampNow();
+
+        // Toast pusher state
+
+        if (pusher.connection.state === 'connecting') {
+            toast({
+                title: 'Connecting WebSocket...',
+                status: 'info',
+                duration: 1000, // 45 s
+                isClosable: true,
+            })
+        }
+
+        if (pusher.connection.state === 'failed') {
+            toast({
+                title: 'WebSocket failed',
+                description: `WebSocket is currently not supported with browser`,
+                status: 'error',
+                duration: 2000, // 45 s
+                isClosable: true,
+            })
+        }
 
         const channelLeakage = pusher.subscribe('my-channel');
         channelLeakage.bind('leakage', (data: { node_leak: string }) => {
             setLeakageNode({ id: parseInt(data.node_leak), timestamps: dateQueryNow });
             sessionStorage.setItem('latestLeakageNode', JSON.stringify({ ...leakageNode }));
         });
+
 
         // Toast if leakaged
         if (leakageNode.id !== -1) {
@@ -40,13 +62,14 @@ const PusherContextProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             })
         };
 
+
         // if (leakageNode?.id === -1 && (JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode)?.id) {
         //     setLeakageNode(JSON.parse(sessionStorage.getItem('latestLeakageNode')!) as LatestLeakageNode);
         // }
 
         return () => { pusher.unsubscribe(key) }
 
-    }, [leakageNode]);
+    }, [leakageNode, pusher.connection.state]);
 
     return (
         <PusherContext.Provider value={{ pusher, key, leakageNode }}>

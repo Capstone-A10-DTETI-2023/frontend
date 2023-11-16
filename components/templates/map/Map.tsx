@@ -76,11 +76,11 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
                                 <Popup className="rounded-sm">
                                     <PopupMap.Container>
                                         <PopupMap.Title>{node?.name}</PopupMap.Title>
-                                        <PopupMap.Alert>
+                                        {/* <PopupMap.Alert>
                                             <>
                                                 A leakage detected in {node?.name}, Press See Details to get more detail about this accident.
                                             </>
-                                        </PopupMap.Alert>
+                                        </PopupMap.Alert> */}
                                         <PopupMap.Information chartData={sensorData?.find(data => `${data?.id_node}` === `${node.id}`)!} />
                                         <PopupMap.Button href={userRolePath === 'USER' || !userRolePath ? `/send` : `/${userRolePath}/nodes/${node?.id}`} />
                                     </PopupMap.Container>

@@ -97,9 +97,6 @@ const Map = () => {
                             </DrawerBody>
 
                             <DrawerFooter>
-                                <Button variant='outline' mr={3} onClick={() => setIsDrawerOpen(false)}>
-                                    Clear
-                                </Button>
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>

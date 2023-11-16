@@ -131,6 +131,7 @@ const Navbar = () => {
                                 </>
                                 :
                                 <>
+                                    <Link className={`text-center py-4 h-full min-w-max ${router.pathname.includes('docs') && 'font-bold text-sky-600 underline underline-offset-8'}`} href={'/docs'}>Docs</Link>
                                     <div id="button-wrapper" aria-label="To Sign In" className="w-fit py-4">
                                         <Button colorScheme='blue'><Link href={'/auth/signin'}>Sign In</Link></Button>
                                     </div>
