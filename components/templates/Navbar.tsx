@@ -91,6 +91,13 @@ const Navbar = () => {
             roles: ['TEKNISI'],
             authOnly: true
         },
+        {
+            id: 'syssettingAdmin',
+            url: '/superadmin/syssetting',
+            label: 'System Setting',
+            roles: ['SUPERADMIN'],
+            authOnly: true
+        },
     ];
 
     return (

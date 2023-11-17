@@ -80,7 +80,7 @@ const AddUserModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => voi
             <Modal isCentered isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay className='fixed top-0 bottom-0 left-0 right-0' />
                 <ModalContent>
-                    <ModalHeader>Add New Sensor</ModalHeader>
+                    <ModalHeader>Add New User</ModalHeader>
                     <ModalCloseButton />
                     <form action="submit" onSubmit={(e) => {
                         e.preventDefault();
