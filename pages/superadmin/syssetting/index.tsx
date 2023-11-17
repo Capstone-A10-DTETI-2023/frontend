@@ -111,7 +111,7 @@ const SystemSetting = () => {
             <div className="breadcrumbs mb-6">
                 <Breadcrumb />
             </div>
-            <h3 className="font-bold text-3xl text-sky-700 mb-6">Manage Sensors</h3>
+            <h3 className="font-bold text-3xl text-sky-700 mb-6">System Setting</h3>
             <form action="submit">
                 <section id="sys-setting" className="flex flex-row gap-12 items-end">
                     <FormControl id="correspendingNode">
