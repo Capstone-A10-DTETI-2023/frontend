@@ -1,7 +1,7 @@
 {
-  "name": "a10-fe",
-  "description": "IoT A10 Frontend",
-  "version": "1.0.0",
+  "name": "hydroguard",
+  "description": "Hydroguard - IoT Web Dashboard for Capstone Project by A-10",
+  "version": "1.0.1",
   "author": {
     "name": "Saddan Syah Akbar",
     "email": "saddanakbar@gmail.com"
