@@ -90,7 +90,18 @@ const Actuator = () => {
                 duration: 5000,
                 isClosable: true,
             });
-        };
+        }
+        else {
+            toast({
+                title: 'Info',
+                description: `Pressure pump value changed to 0 (deactivated)`,
+                status: 'info',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+
+
     }, [payload]);
 
 

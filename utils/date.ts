@@ -2,6 +2,8 @@ const getTimestampNow = (): Record<string, string> => {
     const now = new Date();
     const lastWeek = new Date(now);
     lastWeek.setDate(now.getDate() - 7);
+    const lastMonth = new Date(now);
+    lastMonth.setDate(now.getDate() - 30);
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
@@ -12,6 +14,7 @@ const getTimestampNow = (): Record<string, string> => {
     const dateInputDayAgo = `${year}-${month}-${day}T00:00`;
     const dateInputNow = `${year}-${month}-${day}T${hours}:${minutes}`;
 
+    const dateQueryLastMonth = `${lastMonth.toISOString().slice(0, 10)} 00:00:00`;
     const dateQueryLastWeek = `${lastWeek.toISOString().slice(0, 10)} 00:00:00`;
     const dateQueryLastDay = `${year}-${month}-${day} 00:00:00`;
     const dateQueryNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
@@ -19,6 +22,7 @@ const getTimestampNow = (): Record<string, string> => {
     return {
         dateInputDayAgo,
         dateInputNow,
+        dateQueryLastMonth,
         dateQueryLastWeek,
         dateQueryLastDay,
         dateQueryNow

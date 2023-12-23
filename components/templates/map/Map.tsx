@@ -27,11 +27,11 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
     const userRolePath = user?.role_name.toLowerCase();
 
     // Sensor Data
-    const { dateQueryLastWeek, dateQueryNow } = date.getTimestampNow()
-    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
-    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastWeek}&to=${dateQueryNow}&order_by=DESC&limit=10`, { earlyFetch: true });
+    const { dateQueryLastMonth, dateQueryNow } = date.getTimestampNow();
+    const { data: pressureNode1, error: pressureNode1Error, isLoading: isPressureNode1Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=1&sensor_id=1&from=${dateQueryLastMonth}&to=${dateQueryNow}&order_by=DESC&limit=30`, { earlyFetch: true });
+    const { data: pressureNode2, error: pressureNode2Error, isLoading: isPressureNode2Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=2&sensor_id=2&from=${dateQueryLastMonth}&to=${dateQueryNow}&order_by=DESC&limit=30`, { earlyFetch: true });
+    const { data: pressureNode3, error: pressureNode3Error, isLoading: isPressureNode3Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=3&sensor_id=3&from=${dateQueryLastMonth}&to=${dateQueryNow}&order_by=DESC&limit=30`, { earlyFetch: true });
+    const { data: pressureNode4, error: pressureNode4Error, isLoading: isPressureNode4Loading } = useFetch<SensorData>(`/api/v2/tsdata/sensor?node_id=4&sensor_id=4&from=${dateQueryLastMonth}&to=${dateQueryNow}&order_by=DESC&limit=30`, { earlyFetch: true });
 
     const sensorData = [
         pressureNode1.data as SensorData,
@@ -50,7 +50,7 @@ const Map = ({ nodes, center }: { nodes: Array<CheckedNode>, center?: Array<numb
 
     // Websocket
     const { leakageNode } = usePusherContext();
-    
+
     return (
         <>{center &&
             <MapContainer

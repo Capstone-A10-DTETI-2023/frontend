@@ -106,7 +106,7 @@ const Navbar = () => {
                 <div className="transition-all w-full fixed z-[45] top-0 left-0 right-0 bg-white shadow-md">
                     <ul className="w-full container mx-auto flex flex-row font-semibold text-sm justify-between items-center">
                         <li className="text-lg font-extrabold py-4" >
-                            <Link href={'/'}>A10</Link>
+                            <Link href={'/'}>HydroGuard</Link>
                         </li>
                         <li className="flex items-center space-x-8">
                             {navbarItems && navbarItems
@@ -114,7 +114,6 @@ const Navbar = () => {
                                 ?.map((navbarItem) =>
                                     <Link className={`text-center py-4 h-full min-w-max ${router.pathname.includes(navbarItem.url) && 'font-bold text-sky-600 underline underline-offset-8'}`} key={navbarItem?.id} href={navbarItem?.url}>{navbarItem?.label}</Link>
                                 )}
-
 
                             {user ?
                                 <>
