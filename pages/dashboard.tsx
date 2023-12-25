@@ -24,7 +24,7 @@ const Home = () => {
             <div id="index-wrapper" className='h-full w-full mx-auto container flex items-center'>
                 <div id="content-wrapper" className='flex flex-col gap-2'>
                     <div id="title">
-                        <h1 className='dark:text-white font-extrabold text-4xl'>{'Smart Water Distribution System' || name}</h1>
+                        <h1 className='dark:text-white font-extrabold text-4xl'>{'HydroGuard' || name}</h1>
                         <h6 className=''>by Capstone A-10 DTETI FT UGM</h6>
                     </div>
                     <div id="get-started" className='mt-12'>
